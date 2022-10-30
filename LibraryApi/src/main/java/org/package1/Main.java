@@ -41,7 +41,7 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        System.out.println("server started at port " + port);
+        System.out.println("server runs at port " + port);
         port(port);
         cors("http://127.0.0.1:3000", "*", null);
         MongoClient mongoClient = MongoClients.create(DB_URI);
