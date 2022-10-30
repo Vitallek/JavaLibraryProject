@@ -1,22 +1,20 @@
 package org.package1;
 
 import com.google.gson.Gson;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
 import org.json.JSONObject;
 import org.package1.utility.User;
-
-import java.io.IOException;
 
 import static spark.Spark.*;
 
 public class Main {
     private static final Gson gson = new Gson();
     private static final Integer port = 3001;
+    private static final String DB_URI = "mongodb://localhost:3002";
 
     // Enables CORS on requests. This method is an initialization method and should be called once.
-    private static void enableCORS(final String origin, final String methods, final String headers) {
+    private static void cors(final String origin, final String methods, final String headers) {
 
         options("/*", (request, response) -> {
 
@@ -45,112 +43,77 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("server started at port " + port);
         port(port);
-        enableCORS("http://127.0.0.1:3000", "*", null);
+        cors("http://127.0.0.1:3000", "*", null);
+        MongoClient mongoClient = MongoClients.create(DB_URI);
         post("/register", (req, res) -> {
-//            JSONObject user = new JSONObject(req.body());
             User user = gson.fromJson(req.body(), User.class);
             System.out.println("register from " + user.getEmail());
-            JWTDriver.createToken(user);
-            return MongoDBDriver.addUserIfNotExist(user);
+            return MongoDBDriver.register(mongoClient,user);
         });
         post("/login", (req, res) -> {
-//            JSONObject user = new JSONObject(req.body());
             User user = gson.fromJson(req.body(), User.class);
             System.out.println("login from " + user.getEmail());
-            return MongoDBDriver.manualLogin(user.getEmail(), user.getPassword());
+            return MongoDBDriver.login(mongoClient,user.getEmail(), user.getPassword());
         });
         post("/token-login", (req, res) -> {
             String token = req.body();
-            String payload = JWTDriver.decodeToken(token);
-//            JSONObject user = new JSONObject(payload);
-            User user = gson.fromJson(payload, User.class);
-            return MongoDBDriver.tokenLogin(user.getEmail(), user.getPassword());
+            User user = gson.fromJson(req.body(), User.class);
+            return MongoDBDriver.cookieLogin(mongoClient,user.getEmail(), user.getPassword());
         });
-        post("/add-brand", (req,res) -> {
-            JSONObject response =  MongoDBDriver.addBrand(req.body());
-            res.status(response.getInt("code"));
-            return response;
-        });
-        post("/delete-brand", (req,res) -> {
-            JSONObject response =  MongoDBDriver.deleteBrand(req.body());
-            res.status(response.getInt("code"));
-            return response;
-        });
-        get("/get-all/:coll", (req, res) -> {
-            System.out.println("get all " + req.params(":coll").toLowerCase());
-            JSONObject response = MongoDBDriver.getAllOfProductType(req.params(":coll").toLowerCase());
+        get("/get-all/:collection", (req, res) -> {
+            JSONObject response = MongoDBDriver.getAllFromCollection(mongoClient,req.params(":collection").toLowerCase());
             res.status(response.getInt( "code"));
             return response;
         });
-        get("/get-all-brands", (req, res) -> {
-            System.out.println("get all brands");
-            JSONObject response = MongoDBDriver.getAllBrands();
-            res.status(response.getInt( "code"));
-            return response;
-        });
-        get("/get-all-orders", (req, res) -> {
-            System.out.println("get all orders");
-            JSONObject response = MongoDBDriver.getAllOrders();
-            res.status(response.getInt( "code"));
-            return response;
-        });
-        get("/get-orders/:email", (req, res) -> {
-            System.out.println("get orders from " + req.params(":email"));
-            JSONObject response = MongoDBDriver.getUserOrders(req.params(":email").toLowerCase());
-            res.status(response.getInt( "code"));
-            return response;
-        });
-        delete("delete-all/:coll", (req, res) -> {
-            System.out.println("delete all from " + req.params(":coll"));
-            JSONObject response = MongoDBDriver.deleteAllFromColl(req.params(":coll").toLowerCase());
+        delete("delete-selected-subjects", (req, res) -> {
+            JSONObject response = MongoDBDriver.deleteSelectedFromSubjects(mongoClient,req.body());
             res.status(response.getInt("code"));
             return response;
         });
-        delete("delete-selected/:coll", (req, res) -> {
-            JSONObject response = MongoDBDriver.deleteSelectedFromColl(req.params(":coll").toLowerCase(),req.body());
+        delete("delete-selected-authors", (req, res) -> {
+            JSONObject response = MongoDBDriver.deleteSelectedFromAuthors(mongoClient,req.body());
             res.status(response.getInt("code"));
             return response;
         });
-        get("random-photos/:query", (req, res) -> {
-            System.out.println(req.params(":query"));
-
-            final OkHttpClient client = new OkHttpClient();
-
-            Request request = new Request.Builder()
-                    .url("https://api.unsplash.com/search/photos?query=" + req.params(":query") + " car&per_page=30&page=1")
-                    .header("accept", "application/json")
-                    .header("Authorization", "Client-ID QmOcgkOnjiOK3jwyuiPOk3BA8rIVDtnskS73GnXJRK8")
-                    .build();
-
-            try (Response response = client.newCall(request).execute()) {
-                if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-                res.status(200);
-                return new JSONObject().put("data", response.body().string());
-            } catch (IOException e) {
-                e.printStackTrace();
-                return new JSONObject().put("error", e.toString());
-            }
+        delete("delete-selected-books", (req, res) -> {
+            JSONObject response = MongoDBDriver.deleteSelectedFromBooks(mongoClient,req.body());
+            res.status(response.getInt("code"));
+            return response;
+        });
+        delete("delete-selected-bookscoll", (req, res) -> {
+            JSONObject response = MongoDBDriver.deleteSelectedFromBookCollections(mongoClient,req.body());
+            res.status(response.getInt("code"));
+            return response;
         });
         post("insert-to-coll/:brand",(req,res) -> {
-            JSONObject response = MongoDBDriver.insertMany(req.params(":brand").toLowerCase(), req.body());
+            JSONObject response = MongoDBDriver.insert(mongoClient,req.params(":brand").toLowerCase(), req.body());
             res.status(response.getInt("code"));
             return response;
         });
-        post("order-vehicle/",(req,res) -> {
-            System.out.println(req.body());
-            JSONObject response = MongoDBDriver.orderVehicle(req.body());
+        put("/update-book",(req,res) -> {
+            JSONObject response = MongoDBDriver.updateBook(mongoClient,req.body());
             res.status(response.getInt("code"));
             return response;
         });
-        post("cancel-order/",(req,res) -> {
-            System.out.println(req.body());
-            JSONObject response = MongoDBDriver.cancelOrder(req.body());
+        put("/update-author",(req,res) -> {
+            JSONObject response = MongoDBDriver.updateAuthor(mongoClient,req.body());
             res.status(response.getInt("code"));
             return response;
         });
-        put("update-col/",(req,res) -> {
-            JSONObject response = MongoDBDriver.update(req.body());
+        put("/update-bookcoll",(req,res) -> {
+            JSONObject response = MongoDBDriver.updateBookColl(mongoClient,req.body());
             res.status(response.getInt("code"));
+            return response;
+        });
+        put("/update-subject",(req,res) -> {
+            JSONObject response = MongoDBDriver.updateSubject(mongoClient,req.body());
+            res.status(response.getInt("code"));
+            return response;
+        });
+        get("/get-coll/:email", (req, res) -> {
+            System.out.println("get orders from " + req.params(":email"));
+            JSONObject response = MongoDBDriver.getUserBookColls(mongoClient,req.params(":email").toLowerCase());
+            res.status(response.getInt( "code"));
             return response;
         });
     }
