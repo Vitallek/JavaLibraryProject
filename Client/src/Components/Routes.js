@@ -13,6 +13,7 @@ import UnderConstructionTemplate from "./UnderConstructionTemplate/UnderConstruc
 import AboutCompany from "./Content/AboutCompany";
 import OrdersComponent from "./Orders/OrdersComponent";
 import {brandsMock} from './Utility/brandsMock'
+import HomePageTest from "./HomePage/HomePageTest";
 
 const processBrandsList = (brands) => {
   const menu = []
@@ -62,7 +63,8 @@ const CustomRoutes = ({}) => {
           </Grid>
           <Grid container item xs={12} direction='column' flexWrap='nowrap'>
             <Routes>
-              <Route path='/' element={<HomePage brands={brands}/>} />
+              {/* <Route path='/' element={<HomePage brands={brands}/>} /> */}
+              <Route path='/' element={<HomePageTest brands={brands}/>} />
               <Route path='/repair-service' element={<UnderConstructionTemplate/>} />
               <Route path='/reviews' element={<UnderConstructionTemplate/>} />
               <Route path='/news' element={<UnderConstructionTemplate/>} />

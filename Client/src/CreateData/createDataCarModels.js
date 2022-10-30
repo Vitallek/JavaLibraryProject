@@ -1,6 +1,6 @@
 import axios from 'axios'
-import vinGenerator from 'vin-generator'
-import {colorsRaw} from './colorsRaw'
+import * as FCG from 'fantasy-content-generator'
+
 const getPhotos = async (query) => {
   return axios.get(`http://${process.env.REACT_APP_SERVER_ADDR}/random-photos/${query}`)
     .then(response => {
@@ -20,11 +20,6 @@ const getModels = async () => {
     .then(response => response.data.data)
     .catch(err => console.log(err))
 }
-const colors = [...colorsRaw]
-colors.forEach(el => {
-  delete el.rgb
-  delete el.families
-})
 const randomIntFromInterval = (min, max) => { // min and max included 
   return Math.floor(Math.random() * (max - min + 1) + min)
 }
@@ -88,16 +83,20 @@ export const generateBrandData = async (selectedBrand, amount) => {
       if (miles < 0) miles = 0
     }
     resultPerBrand.push({
+      name: '',
+      year: year,
+      description: FCG.Storyhooks.generate().storyhook,
+
+
+
+
       brand: brand.brand,
       model: carsModels[brandIndex].models[randomModelIndex],
-      year: year,
       gen: gen,
-      color: colors[randomIntFromInterval(0, colors.length - 1)],
       price: price,
       bodyType: types[randomIntFromInterval(0, types.length - 1)],
       mileage: miles,
       fuelType: fuelTypes[randomIntFromInterval(0, fuelTypes.length - 1)],
-      VIN: vinGenerator.generateVin(),
       transmission: transmissions[randomIntFromInterval(0, transmissions.length - 1)],
       images: carsModelsPhotosLinks,
       convenience: convenience[randomIntFromInterval(0, convenience.length - 1)],

@@ -36,7 +36,7 @@ const getAllFromBrand = (selectedBrand, setProducts) => {
 const deleteBrandColl = (selectedBrand, toast) => {
   axios.delete(`http://${process.env.REACT_APP_SERVER_ADDR}/delete-all/${selectedBrand.toLowerCase().replace(/ /g, '-')}`)
     .then(response => {
-      toast.current.show({severity: 'success', summary: 'Уведомление', detail: 'Данные удалены'});
+      toast.current.show({ severity: 'success', summary: 'Уведомление', detail: 'Данные удалены' });
     })
     .catch(err => console.log(err))
 }
@@ -49,7 +49,7 @@ const generateRandomData = async (selectedBrand, amount, setProducts, toast) => 
   axios.put(`http://${process.env.REACT_APP_SERVER_ADDR}/insert-to-coll/${selectedBrand.toLowerCase().replace(/ /g, '-')}`, JSON.stringify(data))
     .then(response => {
       getAllFromBrand(selectedBrand, setProducts)
-      toast.current.show({severity: 'success', summary: 'Уведомление', detail: 'Данные добавлены'});
+      toast.current.show({ severity: 'success', summary: 'Уведомление', detail: 'Данные добавлены' });
     })
     .catch(err => console.log(err))
 }
@@ -58,7 +58,7 @@ const deleteSelected = (selectedBrand, selectedProducts, setProducts, toast) => 
   axios.delete(`http://${process.env.REACT_APP_SERVER_ADDR}/delete-selected/${selectedBrand.toLowerCase().replace(/ /g, '-')}`, { data: JSON.stringify(selectedProducts) })
     .then(response => {
       getAllFromBrand(selectedBrand, setProducts)
-      toast.current.show({severity: 'success', summary: 'Уведомление', detail: 'Данные удалены'});
+      toast.current.show({ severity: 'success', summary: 'Уведомление', detail: 'Данные удалены' });
     })
     .catch(err => console.log(err))
 }
@@ -75,11 +75,11 @@ const deleteSelected = (selectedBrand, selectedProducts, setProducts, toast) => 
 //     .catch(err => console.log(err))
 // }
 const updateVehicle = (selectedBrand, field, value, rowData, toast) => {
-  axios.put(`http://${process.env.REACT_APP_SERVER_ADDR}/update-col/${selectedBrand.toLowerCase().replace(/ /g, '-')}`, 
-  JSON.stringify({field: field,value:value,rowData: rowData["VIN"]})
+  axios.put(`http://${process.env.REACT_APP_SERVER_ADDR}/update-col/${selectedBrand.toLowerCase().replace(/ /g, '-')}`,
+    JSON.stringify({ field: field, value: value, rowData: rowData["VIN"] })
   ).then(response => {
-      toast.current.show({severity: 'success', summary: 'Уведомление', detail: 'Данные обновлены'});
-    })
+    toast.current.show({ severity: 'success', summary: 'Уведомление', detail: 'Данные обновлены' });
+  })
     .catch(err => console.log(err))
 }
 const ModerationComponent = ({ brands }) => {
@@ -132,7 +132,7 @@ const ModerationComponent = ({ brands }) => {
       case 'price':
       case 'status':
       case 'year':
-        if (isPositiveInteger(newValue)){
+        if (isPositiveInteger(newValue)) {
           rowData[field] = newValue;
           updateVehicle(selectedBrand, field, newValue, rowData, toast)
         }
@@ -197,7 +197,7 @@ const ModerationComponent = ({ brands }) => {
   return (
     <>
       <Stack direction='row' spacing={2} sx={{ m: 1 }}>
-        <Toast ref={toast} position="bottom-right"/>
+        <Toast ref={toast} position="bottom-right" />
         <Button
           aria-controls={open ? 'long-menu' : undefined}
           aria-expanded={open ? 'true' : undefined}
@@ -300,13 +300,13 @@ const ModerationComponent = ({ brands }) => {
         <Column field="VIN" header="VIN" filter />
       </DataTable>
 
-        <AddCarDialog 
-          open={openAddDialog}
-          onClose={handleCloseAddDialog}
-          selectedBrand={selectedBrand}
-          brands={brands}
-          refresh={refreshFromDialog}
-        />
+      <AddCarDialog
+        open={openAddDialog}
+        onClose={handleCloseAddDialog}
+        selectedBrand={selectedBrand}
+        brands={brands}
+        refresh={refreshFromDialog}
+      />
     </>
   )
 }
