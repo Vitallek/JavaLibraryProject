@@ -21,11 +21,21 @@ const { MongoClient } = require('mongodb')
 const url = 'mongodb://localhost:3002/JavaLibrary'
 const client = new MongoClient(url)
 const dbName = 'JavaLibrary'
-
+const getPhotos = async (query) => {
+  const response = await axios.get(
+    `https://api.unsplash.com/search/photos?query=${query}&per_page=30&page=1`,
+    {
+      headers: {
+        'Authorization': 'Client-ID QmOcgkOnjiOK3jwyuiPOk3BA8rIVDtnskS73GnXJRK8',
+        'Cookie': 'ugid=98ffbccdf78370197a591a0e5115b0b35547002'
+      }
+    }).catch(err => console.log(err))
+  return response.data.results
+}
 const request = (url) =>
   new Promise(resolve =>
     setTimeout(async () => {
-      const response = await axios.get(
+      const bookData = await axios.get(
         `https://openlibrary.org${url}.json`,
         {
           // headers: {
@@ -33,11 +43,13 @@ const request = (url) =>
           //   'Cookie': 'ugid=98ffbccdf78370197a591a0e5115b0b35547002'
           // }
         }).catch(err => console.log(err))
-      resolve(response.data)
+
+      resolve(bookData.data)
     }, 1000)
   )
 const generate = async () => {
-  for (const [i,item] of trending.entries()) {
+  const photos = await getPhotos('book')
+  for (const [i, item] of trending.entries()) {
     let data = await request(item.key)
     console.log(i)
     console.log(data)
@@ -52,13 +64,14 @@ const generate = async () => {
       description: data.description,
       subject: subject,
       links: data.links,
-      rate: randomIntFromInterval(0,50)/10
+      rate: randomIntFromInterval(0, 50) / 10,
+      image: photos[randomIntFromInterval(0, photos.length - 1)].urls.regular
     })
     authors.push({
       author_key: item.author_key[0],
       author_name: item.author_name[0],
     })
-    if (data.subjects !== undefined){
+    if (data.subjects !== undefined) {
       data.subjects.forEach(s => {
         subjects.push({
           subject: s
@@ -74,20 +87,20 @@ const createDB = async () => {
   await client.connect()
   const db = client.db(dbName)
   const usersColl = db.collection('Users')
-  await usersColl.createIndex({email:1},{unique:true})
+  await usersColl.createIndex({ email: 1 }, { unique: true })
   const booksColl = db.collection('Books')
-  await booksColl.createIndex({title:1})
-  await booksColl.createIndex({first_publish_year:1})
-  await booksColl.createIndex({author_name:1})
-  await booksColl.createIndex({subject:1})
+  await booksColl.createIndex({ title: 1 })
+  await booksColl.createIndex({ first_publish_year: 1 })
+  await booksColl.createIndex({ author_name: 1 })
+  await booksColl.createIndex({ subject: 1 })
   await booksColl.insertMany(books)
   const collOfBooks = db.collection('BookCollections')
-  await collOfBooks.createIndex({email:1})
-  await collOfBooks.createIndex({name:1})
+  await collOfBooks.createIndex({ email: 1 })
+  await collOfBooks.createIndex({ name: 1 })
   const authorsColl = db.collection('Authors')
-  await authorsColl.createIndex({author_key:1})
+  await authorsColl.createIndex({ author_key: 1 })
   await authorsColl.insertMany(authors)
   const subjectsColl = db.collection('Subjects')
-  await subjectsColl.createIndex({subject:1}, {unique:true})
-  await subjectsColl.insertMany(subjects, {ordered: false})
+  await subjectsColl.createIndex({ subject: 1 }, { unique: true })
+  await subjectsColl.insertMany(subjects, { ordered: false })
 }
