@@ -15,13 +15,13 @@ import Cookies from "js-cookie";
 const menu = [
   {
     // icon: <HomeRoundedIcon />,
-    title: 'Обзоры',
+    title: 'Автомобили',
     to: '/reviews',
     items: []
   },
   {
     // icon: <HomeRoundedIcon />,
-    title: 'Новости',
+    title: 'Обзоры',
     to: '/news',
     items: []
   },

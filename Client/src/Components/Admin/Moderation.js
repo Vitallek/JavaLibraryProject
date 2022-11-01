@@ -14,6 +14,7 @@ import { InputText } from 'primereact/inputtext';
 import { generateBrandData } from '../../CreateData/createDataCarModels';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddCarDialog from './AddCarDialog';
+import '@fontsource/roboto/400.css';
 
 const ITEM_HEIGHT = 48
 const isPositiveInteger = (val) => {

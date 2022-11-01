@@ -10,7 +10,6 @@ import { Toast } from 'primereact/toast';
 import { Button, Stack, TextField, Box, List } from '@mui/material';
 import { MenuItem, Menu } from '@mui/material'
 import { InputText } from 'primereact/inputtext';
-import { generateBrandData } from '../../CreateData/createDataCarModels';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddCarDialog from './AddCarDialog';
 import AddBrandDialog from './AddBrandDialog';
@@ -40,19 +39,19 @@ const deleteBrandColl = (selectedBrand, toast) => {
     })
     .catch(err => console.log(err))
 }
-const generateRandomData = async (selectedBrand, amount, setProducts, toast) => {
-  if (amount === '') {
-    alert('empty input')
-    return
-  }
-  let data = await generateBrandData(selectedBrand, parseInt(amount))
-  axios.post(`http://${process.env.REACT_APP_SERVER_ADDR}/insert-to-coll/${selectedBrand.toLowerCase().replace(/ /g, '-')}`, JSON.stringify(data))
-    .then(response => {
-      getAllFromBrand(selectedBrand, setProducts)
-      toast.current.show({severity: 'success', summary: 'Уведомление', detail: 'Данные добавлены'});
-    })
-    .catch(err => console.log(err))
-}
+// const generateRandomData = async (selectedBrand, amount, setProducts, toast) => {
+//   if (amount === '') {
+//     alert('empty input')
+//     return
+//   }
+//   let data = await generateBrandData(selectedBrand, parseInt(amount))
+//   axios.post(`http://${process.env.REACT_APP_SERVER_ADDR}/insert-to-coll/${selectedBrand.toLowerCase().replace(/ /g, '-')}`, JSON.stringify(data))
+//     .then(response => {
+//       getAllFromBrand(selectedBrand, setProducts)
+//       toast.current.show({severity: 'success', summary: 'Уведомление', detail: 'Данные добавлены'});
+//     })
+//     .catch(err => console.log(err))
+// }
 const deleteSelected = (selectedBrand, selectedProducts, setProducts, toast) => {
   console.log(selectedProducts)
   axios.delete(`http://${process.env.REACT_APP_SERVER_ADDR}/delete-selected/${selectedBrand.toLowerCase().replace(/ /g, '-')}`, { data: JSON.stringify(selectedProducts) })
@@ -280,13 +279,6 @@ const CarsComponent = ({ brands }) => {
           }}
           inputRef={generateNumRef}
         />
-        <Button
-          disabled={selectedBrand === 'Select Brand'}
-          color='error'
-          onClick={() => generateRandomData(selectedBrand, generateNumRef.current.value, setProducts, toast)}
-        >
-          {`<- generate random`}
-        </Button>
         <Button
           disabled={selectedBrand === 'Select Brand'}
           color='error'

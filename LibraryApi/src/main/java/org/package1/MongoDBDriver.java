@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mongodb.MongoException;
 import com.mongodb.client.*;
+import com.mongodb.client.model.Sorts;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.InsertOneResult;
 import org.bson.Document;
@@ -15,6 +16,7 @@ import org.package1.utility.User;
 import java.util.*;
 
 import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Filters.gte;
 
 public class MongoDBDriver {
     private static final Gson gson = new Gson();
@@ -129,12 +131,53 @@ public class MongoDBDriver {
             MongoCollection<Document> collection = database.getCollection(coll);
             FindIterable<Document> findIterable = collection.find();
             Iterator<Document> iterator = findIterable.iterator();
-            ArrayList<Document> products = new ArrayList<>();
+            ArrayList<Document> items = new ArrayList<>();
             while (iterator.hasNext()) {
-                products.add(iterator.next());
+                items.add(iterator.next());
             }
             JSONObject dataJson = new JSONObject();
-            dataJson.put("data", products);
+            dataJson.put("data", items);
+            dataJson.put("code", 200);
+            return dataJson;
+        } catch (Exception e) {
+            System.out.println(e);
+            JSONObject dataJson = new JSONObject();
+            dataJson.put("desc",e.toString());
+            dataJson.put("code",500);
+            return dataJson;
+        }
+    }
+    public static JSONObject getTopRatedData(MongoClient mongoClient){
+        try {
+            MongoDatabase database = mongoClient.getDatabase(DB_NAME);
+            MongoCollection<Document> booksColl = database.getCollection(BOOKS);
+            MongoCollection<Document> authorsColl = database.getCollection(AUTHORS);
+            MongoCollection<Document> subjectsColl = database.getCollection(SUBJECTS);
+
+            FindIterable<Document> findIterableBooks = booksColl.find(gte("rate",4)).sort(Sorts.ascending("rate"));
+            FindIterable<Document> findIterableAuthors = authorsColl.find(gte("rate",4)).sort(Sorts.ascending("rate"));
+            FindIterable<Document> findIterableSubjects = subjectsColl.find(gte("rate",4.5)).sort(Sorts.ascending("rate"));
+
+            Iterator<Document> iteratorBooks = findIterableBooks.iterator();
+            Iterator<Document> iteratorAuthors = findIterableAuthors.iterator();
+            Iterator<Document> iteratorSubjects = findIterableSubjects.iterator();
+
+            ArrayList<Document> books = new ArrayList<>();
+            while (iteratorBooks.hasNext()) {
+                books.add(iteratorBooks.next());
+            }
+            ArrayList<Document> authors = new ArrayList<>();
+            while (iteratorAuthors.hasNext()) {
+                authors.add(iteratorAuthors.next());
+            }
+            ArrayList<Document> subjects = new ArrayList<>();
+            while (iteratorSubjects.hasNext()) {
+                subjects.add(iteratorSubjects.next());
+            }
+            JSONObject dataJson = new JSONObject();
+            dataJson.put("books", books);
+            dataJson.put("authors", authors);
+            dataJson.put("subjects", subjects);
             dataJson.put("code", 200);
             return dataJson;
         } catch (Exception e) {

@@ -21,6 +21,7 @@ const { MongoClient } = require('mongodb')
 const url = 'mongodb://localhost:3002/JavaLibrary'
 const client = new MongoClient(url)
 const dbName = 'JavaLibrary'
+
 const getPhotos = async (query) => {
   const response = await axios.get(
     `https://api.unsplash.com/search/photos?query=${query}&per_page=30&page=1`,
@@ -48,7 +49,13 @@ const request = (url) =>
     }, 1000)
   )
 const generate = async () => {
-  const photos = await getPhotos('book')
+  const bookPhotos = await getPhotos('book')
+  //sleep 1 sec
+  await new Promise(resolve => setTimeout(resolve, 1000))
+  const authorPhotos = await getPhotos('profile picture')
+  //sleep 1 sec
+  await new Promise(resolve => setTimeout(resolve, 1000))
+  const subjectPhotos = await getPhotos('state of mind')
   for (const [i, item] of trending.entries()) {
     let data = await request(item.key)
     console.log(i)
@@ -64,17 +71,21 @@ const generate = async () => {
       description: data.description,
       subject: subject,
       links: data.links,
-      rate: randomIntFromInterval(0, 50) / 10,
-      image: photos[randomIntFromInterval(0, photos.length - 1)].urls.regular
+      rate: randomIntFromInterval(30, 50) / 10,
+      image: bookPhotos[randomIntFromInterval(0, bookPhotos.length - 1)].urls.regular
     })
     authors.push({
       author_key: item.author_key[0],
       author_name: item.author_name[0],
+      rate: randomIntFromInterval(30, 48) / 10,
+      image: authorPhotos[randomIntFromInterval(0, authorPhotos.length - 1)].urls.regular
     })
     if (data.subjects !== undefined) {
       data.subjects.forEach(s => {
         subjects.push({
-          subject: s
+          subject: s,
+          rate: randomIntFromInterval(0, 49) / 10,
+          image: subjectPhotos[randomIntFromInterval(0, subjectPhotos.length - 1)].urls.regular
         })
       })
     }

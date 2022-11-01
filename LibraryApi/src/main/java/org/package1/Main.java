@@ -65,6 +65,11 @@ public class Main {
             res.status(response.getInt( "code"));
             return response;
         });
+        get("/get-top-rated-data", (req, res) -> {
+            JSONObject response = MongoDBDriver.getTopRatedData(mongoClient);
+            res.status(response.getInt( "code"));
+            return response;
+        });
         delete("delete-selected-subjects", (req, res) -> {
             JSONObject response = MongoDBDriver.deleteSelectedFromSubjects(mongoClient,req.body());
             res.status(response.getInt("code"));
