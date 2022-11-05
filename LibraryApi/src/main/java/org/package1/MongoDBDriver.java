@@ -152,6 +152,28 @@ public class MongoDBDriver {
             return dataJson;
         }
     }
+    public static JSONObject getAllFromCollectionQueried(MongoClient mongoClient, String coll, String query){
+        try {
+            MongoDatabase database = mongoClient.getDatabase(DB_NAME);
+            MongoCollection<Document> collection = database.getCollection(coll);
+            FindIterable<Document> findIterable = collection.find(eq("title",query));
+            Iterator<Document> iterator = findIterable.iterator();
+            ArrayList<Document> items = new ArrayList<>();
+            while (iterator.hasNext()) {
+                items.add(iterator.next());
+            }
+            JSONObject dataJson = new JSONObject();
+            dataJson.put("data", items);
+            dataJson.put("code", 200);
+            return dataJson;
+        } catch (Exception e) {
+            System.out.println(e);
+            JSONObject dataJson = new JSONObject();
+            dataJson.put("desc",e.toString());
+            dataJson.put("code",500);
+            return dataJson;
+        }
+    }
     public static JSONObject getTopRatedData(MongoClient mongoClient){
         try {
             MongoDatabase database = mongoClient.getDatabase(DB_NAME);

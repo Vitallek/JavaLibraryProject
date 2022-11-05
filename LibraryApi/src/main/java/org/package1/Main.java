@@ -69,6 +69,16 @@ public class Main {
             res.status(response.getInt( "code"));
             return response;
         });
+        get("/get-with-query/:collection/:query", (req, res) -> {
+            System.out.println(req.params(":query").toLowerCase());
+            JSONObject response = MongoDBDriver.getAllFromCollectionQueried(
+                    mongoClient,
+                    req.params(":collection").toLowerCase(),
+                    req.params(":query")
+            );
+            res.status(response.getInt( "code"));
+            return response;
+        });
         get("/get-search-keys", (req, res) -> {
             JSONObject response = MongoDBDriver.getSearchKeys(mongoClient);
             res.status(response.getInt( "code"));

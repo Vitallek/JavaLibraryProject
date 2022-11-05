@@ -4,12 +4,13 @@ import { Grid } from "@mui/material";
 import ProtectedRoutes from "./ProtectedRoutes";
 import { UserInfoContext } from "../UserInfoContext";
 import HomePage from "./HomePage/HomePage";
-import AllFromBrandComponent from "./AllProductsComponent/AllFromBrandComponent";
+import AllFromBrandComponent from "./ItemComponent/ItemComponent";
 import UnderConstructionTemplate from "./UnderConstructionTemplate/UnderConstructionTemplate";
 import AboutCompany from "./Content/AboutCompany";
 import OrdersComponent from "./Orders/OrdersComponent";
 import TopNavComponent from "./Navigation/TopNavComponent";
 import SearchComponent from "./Search/SearchComponent";
+import ItemComponent from "./ItemComponent/ItemComponent";
 
 const CustomRoutes = ({ }) => {
   const props = useContext(UserInfoContext)
@@ -30,6 +31,7 @@ const CustomRoutes = ({ }) => {
         <Routes>
           <Route path='/' element={<HomePage/>} />
           <Route path='/search' element={<SearchComponent />} />
+          <Route path='/item/:type/:id' element={<ItemComponent />} />
 
 
           

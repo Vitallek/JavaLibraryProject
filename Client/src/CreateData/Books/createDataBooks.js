@@ -61,16 +61,18 @@ const generate = async () => {
     console.log(i)
     console.log(data)
     let subject = ''
+    let links = []
     if (data.subjects !== undefined) subject = data.subjects[0]
+    if (data.links !== undefined) links = [...data.links]
     books.push({
       key: item.key,
-      title: item.title,
+      title: item.title + ' (' + item.first_publish_year +')',
       first_publish_year: item.first_publish_year,
       author_key: item.author_key[0],
       author_name: item.author_name[0],
       description: data.description,
       subject: subject,
-      links: data.links,
+      links: links,
       rate: randomIntFromInterval(30, 50) / 10,
       image: bookPhotos[randomIntFromInterval(0, bookPhotos.length - 1)].urls.regular
     })
@@ -91,27 +93,47 @@ const generate = async () => {
     }
   }
   fs.writeFileSync('./books.json', JSON.stringify(books, null, '\t'))
+  fs.writeFileSync('./subjects.json', JSON.stringify(subjects, null, '\t'))
   createDB()
 }
-generate()
 const createDB = async () => {
   await client.connect()
   const db = client.db(dbName)
   const usersColl = db.collection('Users')
+  usersColl.deleteMany()
   await usersColl.createIndex({ email: 1 }, { unique: true })
+
   const booksColl = db.collection('books')
+  booksColl.deleteMany()
   await booksColl.createIndex({ title: 1 })
   await booksColl.createIndex({ first_publish_year: 1 })
   await booksColl.createIndex({ author_name: 1 })
   await booksColl.createIndex({ subject: 1 })
   await booksColl.insertMany(books)
+
   const collOfBooks = db.collection('bookcollections')
+  collOfBooks.deleteMany()
   await collOfBooks.createIndex({ email: 1 })
   await collOfBooks.createIndex({ name: 1 })
+
   const authorsColl = db.collection('authors')
-  await authorsColl.createIndex({ author_key: 1 })
-  await authorsColl.insertMany(authors)
+  authorsColl.deleteMany()
+  await authorsColl.createIndex({ author_key: 1 },{unique:true})
+  await authorsColl.insertMany(authors, { ordered: false })
+
   const subjectsColl = db.collection('subjects')
+  subjectsColl.deleteMany()
   await subjectsColl.createIndex({ subject: 1 }, { unique: true })
-  await subjectsColl.insertMany(subjects, { ordered: false })
+  await subjectsColl.insertMany(subjects,{ordered: false})
 }
+const pushOneFromJSON = async () => {
+  const data = JSON.parse(fs.readFileSync('./subjects.json'))
+  await client.connect()
+  const db = client.db(dbName)
+  const subjectsColl = db.collection('subjects')
+  subjectsColl.deleteMany()
+  await subjectsColl.createIndex({ subject: 1 }, { unique: true })
+  await subjectsColl.insertMany(data,{ordered: false})
+}
+generate()
+// pushOneFromJSON()

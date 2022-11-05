@@ -10,23 +10,12 @@ import 'primereact/resources/themes/lara-light-indigo/theme.css';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
-import { AuthorItemCard, BookItemCard, SubjectItemCard } from './ItemCardComponent';
 
 const takeValues = [10, 20, 30, 50, 100]
-
-const requestContent = async (setDisplayedContent, selectedField, take, skip) => {
-  axios.get(`http://${process.env.REACT_APP_SERVER_ADDR}/get-all/${selectedField.toLocaleLowerCase()}/${take}/${take * skip}`)
-    .then(res => {
-      console.log(res.data)
-      if(selectedField.toLocaleLowerCase() === 'books') setDisplayedContent(res.data.data.slice().sort((el1,el2) => el2.links.length - el1.links.length))
-    })
-    .catch(err => alert('can`t get data'))
-}
-
-const SearchComponent = () => {
+const ItemComponent = () => {
   const [searchKeys, setSearchKeys] = useState({})
   const [fields, setFields] = useState([])
-  const [selectedField, setSelectedField] = useState('Books')
+  const [selectedField, setSelectedField] = useState('')
 
   const [displayedContent, setDisplayedContent] = useState([])
   const [skipTakeParams, setSkipTakeParams] = useState({
@@ -44,9 +33,22 @@ const SearchComponent = () => {
       })
       .catch(err => alert('can`t get data'))
   }
+  const requestContent = async (setDisplayedContent) => {
+    axios.get(`http://${process.env.REACT_APP_SERVER_ADDR}/get-all/${selectedField.toLocaleLowerCase()}/${skipTakeParams.take}/${skipTakeParams.take * skipTakeParams.skip}`)
+      .then(res => {
+        console.log(res.data)
+        setDisplayedContent(res.data.data)
+      })
+      .catch(err => alert('can`t get data'))
+  }
+  useEffect(() => {
+    if (selectedField === '') return
+    requestContent(setDisplayedContent)
+  }, [skipTakeParams.take, skipTakeParams.skip])
 
   useEffect(() => {
-    requestContent(setDisplayedContent, selectedField, skipTakeParams.take, skipTakeParams.skip)
+    if (selectedField === '') return
+    requestContent(setDisplayedContent)
   }, [selectedField])
 
   useEffect(() => {
@@ -90,7 +92,7 @@ const SearchComponent = () => {
             </Typography>
             <Select
               sx={{ minWidth: "10vw" }}
-              value={searchKeys[selectedField.toLowerCase()] === undefined ? '' : selectedField}
+              value={selectedField}
               onChange={e => setSelectedField(e.target.value)}
             >
               {fields.map(field => (
@@ -99,40 +101,25 @@ const SearchComponent = () => {
                 </MenuItem>
               ))}
             </Select>
+            {/* <TextField
+              inputRef={searchRef}
+              sx={{ width: '30vw' }}
+              label='Search query'
+              variant="standard"
+              InputLabelProps={{ style: { fontSize: 30 } }}
+              InputProps={{ style: { fontSize: 30 } }}
+              onKeyPress={e => searchByKey(e, searchRef)}
+            /> */}
             {searchKeys.books && <Autocomplete
+              disabled={selectedField === ''}
               selectOnFocus={false}
-              options={searchKeys[selectedField.toLowerCase()] === undefined ? [] : searchKeys?.[selectedField.toLowerCase()]}
+              options={selectedField === '' ? [] : searchKeys?.[selectedField.toLowerCase()]}
               sx={{ width: 300 }}
               renderInput={(props) => <TextField {...props} label={selectedField} onKeyPress={e => searchByKey(e, selectedField)} />}
             />}
             <Tooltip title='Press enter' placement='right'>
               <SearchRoundedIcon sx={{ color: 'action.active', mr: 1, my: 0.5, fontSize: 30, cursor: 'pointer' }} />
             </Tooltip>
-          </Stack>
-          <Stack direction="row" sx={{ maxHeight: '80vh', overflowY: 'scroll', p: 1, justifyContent: 'center', flexWrap: 'wrap' }}>
-            {displayedContent.length > 0 && displayedContent.map((item, itemIndex) => {
-              if (selectedField.toLocaleLowerCase() === 'books') return (
-                <BookItemCard
-                  key={itemIndex}
-                  book={item}
-                  bookIndex={itemIndex}
-                />
-              )
-              if (selectedField.toLocaleLowerCase() === 'authors') return (
-                <AuthorItemCard
-                  key={itemIndex}
-                  author={item}
-                  authorIndex={itemIndex}
-                />
-              )
-              if (selectedField.toLocaleLowerCase() === 'subjects') return (
-                <SubjectItemCard
-                  key={itemIndex}
-                  subject={item}
-                  subjectIndex={itemIndex}
-                />
-              )
-            })}
           </Stack>
           <Stack direction='row' spacing={2} display='flex' alignItems='center'>
             <Typography
@@ -142,10 +129,7 @@ const SearchComponent = () => {
             </Typography>
             <Select
               value={skipTakeParams.take}
-              onChange={e => {
-                setSkipTakeParams(prev => ({ ...prev, take: e.target.value }))
-                requestContent(setDisplayedContent, selectedField, e.target.value, skipTakeParams.skip)
-              }}
+              onChange={e => setSkipTakeParams(prev => ({ ...prev, take: e.target.value }))}
             >
               {takeValues.map(field => (
                 <MenuItem key={field} value={field}>
@@ -155,10 +139,10 @@ const SearchComponent = () => {
             </Select>
             <Pagination
               size='large'
-              count={searchKeys[selectedField.toLowerCase()] === undefined ? 10 : Math.floor(searchKeys[selectedField.toLocaleLowerCase()].length / skipTakeParams.take)}
+              count={selectedField === '' ? 10 : Math.ceil(searchKeys[selectedField.toLocaleLowerCase()].length / skipTakeParams.take)}
               variant="outlined"
               shape="rounded"
-              onChange={(e, value) => requestContent(setDisplayedContent, selectedField, skipTakeParams.take, value)}
+              onChange={(e, value) => handleChangePage(value)}
             />
           </Stack>
         </Stack>
@@ -168,4 +152,4 @@ const SearchComponent = () => {
   )
 }
 
-export default SearchComponent
+export default ItemComponent
