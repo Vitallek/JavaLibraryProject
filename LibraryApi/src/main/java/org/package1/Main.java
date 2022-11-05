@@ -58,8 +58,19 @@ public class Main {
         post("/cookie-login", (req, res) -> {
             return MongoDBDriver.cookieLogin(mongoClient, req.body());
         });
-        get("/get-all/:collection", (req, res) -> {
-            JSONObject response = MongoDBDriver.getAllFromCollection(mongoClient,req.params(":collection").toLowerCase());
+        get("/get-all/:collection/:take/:skip", (req, res) -> {
+            System.out.println(req.params(":collection"));
+            JSONObject response = MongoDBDriver.getAllFromCollection(
+                    mongoClient,
+                    req.params(":collection").toLowerCase(),
+                    Integer.parseInt(req.params(":take")),
+                    Integer.parseInt(req.params(":skip"))
+            );
+            res.status(response.getInt( "code"));
+            return response;
+        });
+        get("/get-search-keys", (req, res) -> {
+            JSONObject response = MongoDBDriver.getSearchKeys(mongoClient);
             res.status(response.getInt( "code"));
             return response;
         });

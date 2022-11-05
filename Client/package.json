@@ -14,7 +14,7 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^0.27.2",
     "crypto-hash": "^2.0.1",
-    "fantasy-content-generator": "^4.9.1",
+    "fuse.js": "^6.6.2",
     "js-cookie": "^3.0.1",
     "memoize-one": "^6.0.0",
     "mongodb": "^4.11.0",

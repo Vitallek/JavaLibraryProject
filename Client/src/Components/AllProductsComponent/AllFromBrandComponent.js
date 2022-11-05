@@ -4,7 +4,7 @@ import { Grid, Button, Link, Stack, Typography, TextField, MenuItem, IconButton 
 import { Slider } from 'primereact/slider';
 import { Box } from '@mui/system';
 import axios from 'axios';
-import MediaCard from './ProductCardComponent';
+import {BookItemCard} from '../Search/ItemCardComponent';
 import { Button as PrimeButton } from 'primereact/button'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
@@ -225,7 +225,7 @@ const AllFromBrandComponent = ({brands}) => {
       <Grid item xs={12} sx={{maxHeight: '80vh',overflowY:'scroll'}}>
         <Stack direction="row" sx={{ p: 1, justifyContent:'center',flexWrap: 'wrap' }}>
           {filteredContent.map((element, elIndex) => 
-          <MediaCard 
+          <BookItemCard 
             key={elIndex} 
             element={element} 
             elIndex={elIndex} 

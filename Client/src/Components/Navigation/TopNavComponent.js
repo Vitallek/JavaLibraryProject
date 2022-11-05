@@ -5,9 +5,9 @@ import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded';
 import LoginRoundedIcon from '@mui/icons-material/LoginRounded';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
+import CollectionsBookmarkRoundedIcon from '@mui/icons-material/CollectionsBookmarkRounded';
 import AutoStoriesRoundedIcon from '@mui/icons-material/AutoStoriesRounded';
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
-import DirectionsCarRoundedIcon from '@mui/icons-material/DirectionsCarRounded';
 import SupervisorAccountRoundedIcon from '@mui/icons-material/SupervisorAccountRounded';
 import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded';
 import '@fontsource/roboto/400.css';
@@ -25,14 +25,14 @@ const menu = [
   {
     // icon: <HomeRoundedIcon />,
     title: 'About',
-    to: '/news',
+    to: '/about',
     items: []
   },
 
   {
     // icon: <HomeRoundedIcon />,
-    title: 'Account',
-    to: '/company-about',
+    title: 'Collections',
+    to: '/collections',
     items: []
   }
 ]
@@ -99,7 +99,7 @@ const TopNavComponent = ({ authorized, role }) => {
             <AccountCircleRoundedIcon />
           </ListItemIcon>
           <ListItemText>
-            Ваш аккаунт
+            Profile
           </ListItemText>
         </MenuItem>
         {role === 'admin' || role === 'head_cheater' ?
@@ -111,7 +111,7 @@ const TopNavComponent = ({ authorized, role }) => {
               <SupervisorAccountRoundedIcon />
             </ListItemIcon>
             <ListItemText>
-              Админка
+              Administration
             </ListItemText>
           </MenuItem> : null
         }
@@ -120,7 +120,7 @@ const TopNavComponent = ({ authorized, role }) => {
             <FavoriteRoundedIcon />
           </ListItemIcon>
           <ListItemText>
-            Избранное
+            Favourite
           </ListItemText>
         </MenuItem>
         <MenuItem onClick={() => {
@@ -128,10 +128,10 @@ const TopNavComponent = ({ authorized, role }) => {
           navigate('/orders')
         }}>
           <ListItemIcon>
-            <DirectionsCarRoundedIcon />
+            <CollectionsBookmarkRoundedIcon />
           </ListItemIcon>
           <ListItemText>
-            Мои заказы
+            My collections
           </ListItemText>
         </MenuItem>
         <MenuItem onClick={Logout}>
@@ -139,7 +139,7 @@ const TopNavComponent = ({ authorized, role }) => {
             <LogoutRoundedIcon />
           </ListItemIcon>
           <ListItemText>
-            Выйти
+            Logout
           </ListItemText>
         </MenuItem>
       </Menu>
@@ -187,6 +187,7 @@ const TopNavComponent = ({ authorized, role }) => {
       <Box
         onClick={() => navigate('/')}
         sx={{
+          ml:2,
           cursor: 'pointer',
           height: '100%',
           p: 1

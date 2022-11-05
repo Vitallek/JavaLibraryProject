@@ -1,12 +1,12 @@
 import { useContext, useEffect, useState, useRef } from 'react';
-import { Stack, Card, CardActions, CardContent, CardMedia, Button, Typography } from '@mui/material';
+import { Stack, Card, CardActions, CardContent, CardMedia, Button, Typography, Rating } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { UserInfoContext } from '../../UserInfoContext';
 import { Toast } from 'primereact/toast';
 import { Button as PrimeButton } from 'primereact/button'
 import axios from 'axios'
 let buyTimeout
-const processOrder = (element,userInfoContext) => {
+const processOrder = (element, userInfoContext) => {
   element.user_email = userInfoContext.email
   element.user_phone = userInfoContext.phone
   delete element._id
@@ -51,72 +51,42 @@ const showConfirm = (toast, setCardStatus) => {
   })
 }
 
-const MediaCard = ({ element, elIndex }) => {
+export const BookItemCard = ({ book, bookIndex }) => {
   const userInfoContext = useContext(UserInfoContext)
   const [cardStatus, setCardStatus] = useState(0)
   const toast = useRef(null)
   return (
-    <Card sx={{ maxWidth: 345, m: 2 }}>
+    <Card
+      key={bookIndex}
+      sx={{
+        minWidth: 200,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        minHeight: '350px',
+        m: 2
+      }}
+    >
       <Toast ref={toast} position="bottom-right" />
       <CardMedia
         component="img"
-        height="140"
-        image={element.images[elIndex]}
+        height={200}
+        image={book.image}
         alt="green iguana"
       />
       <CardContent>
-        <Typography gutterBottom variant="h5" component="div">
-          {`${element.brand} ${element.model} ${element.year} - ${element.price}$`}
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          {`
-          - Color - ${element.color.name}
-          - Transmission - ${element.transmission}
-          - ${element.entertainment}
-          - ${element.convenience}
-          - ${element.fuelType}
-          - ${element.safety}
-          - ${element.seating}
-          `}
+        <div>
+          <strong>{book.title}</strong>{` - `}<br />
+          <span>{book.author_name}</span>
+
+        </div>
+      </CardContent>
+      <CardContent>
+        <Typography display='flex' alignItems='center'>
+          <Typography component="legend">{parseFloat(book.rate).toFixed(1)}</Typography>
+          <Rating name="read-only" value={Math.floor(book.rate)} readOnly />
         </Typography>
       </CardContent>
-      <CardActions>
-        {cardStatus === 0 &&
-          <Button
-            size="small"
-            onClick={() => {
-              if (userInfoContext.auth === false) {
-                toast.current.show({ severity: 'error', summary: 'Ошибка', detail: 'Пожалуйста, авторизуйтесь', life: 3000 });
-                return
-              }
-              setCardStatus(1)
-              showConfirm(toast, setCardStatus)
-
-              buyTimeout = setTimeout(() => {
-                setCardStatus(2)
-                processOrder(element, userInfoContext)
-                toast.current.show({severity:'success', summary: 'Заказ создан', life: 3000});
-              }, 5000)
-            }}
-          >
-            Купить
-          </Button>}
-        {cardStatus === 1 &&
-          <LoadingButton
-            loading
-            size="small"
-          >
-            Купить
-          </LoadingButton >}
-        {cardStatus === 2 &&
-          <Button
-            disabled
-            size="small"
-          >
-            Купить
-          </Button >}
-      </CardActions>
     </Card>
   );
 }
-export default MediaCard

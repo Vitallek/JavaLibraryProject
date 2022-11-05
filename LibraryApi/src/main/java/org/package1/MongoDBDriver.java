@@ -4,9 +4,11 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mongodb.MongoException;
 import com.mongodb.client.*;
+import com.mongodb.client.model.Projections;
 import com.mongodb.client.model.Sorts;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.InsertOneResult;
+import com.mongodb.lang.Nullable;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
@@ -22,10 +24,10 @@ public class MongoDBDriver {
     private static final Gson gson = new Gson();
     public static final String DB_NAME = "JavaLibrary";
     public static final String USERS = "Users";
-    public static final String AUTHORS = "Authors";
-    public static final String SUBJECTS = "Subjects";
-    public static final String BOOKS = "Books";
-    public static final String BOOKCOLLS = "BookCollections";
+    public static final String AUTHORS = "authors";
+    public static final String SUBJECTS = "subjects";
+    public static final String BOOKS = "books";
+    public static final String BOOKCOLLS = "bookcollections";
     public static JSONObject register(MongoClient mongoClient, User user) {
         try {
             MongoDatabase database = mongoClient.getDatabase(DB_NAME);
@@ -128,11 +130,11 @@ public class MongoDBDriver {
             return dataJson;
         }
     }
-    public static JSONObject getAllFromCollection(MongoClient mongoClient, String coll){
+    public static JSONObject getAllFromCollection(MongoClient mongoClient, String coll, @Nullable Integer take, @Nullable Integer skip){
         try {
             MongoDatabase database = mongoClient.getDatabase(DB_NAME);
             MongoCollection<Document> collection = database.getCollection(coll);
-            FindIterable<Document> findIterable = collection.find();
+            FindIterable<Document> findIterable = collection.find().skip(skip).limit(take);
             Iterator<Document> iterator = findIterable.iterator();
             ArrayList<Document> items = new ArrayList<>();
             while (iterator.hasNext()) {
@@ -160,6 +162,47 @@ public class MongoDBDriver {
             FindIterable<Document> findIterableBooks = booksColl.find(gte("rate",4)).sort(Sorts.ascending("rate"));
             FindIterable<Document> findIterableAuthors = authorsColl.find(gte("rate",4)).sort(Sorts.ascending("rate"));
             FindIterable<Document> findIterableSubjects = subjectsColl.find(gte("rate",4.5)).sort(Sorts.ascending("rate"));
+
+            Iterator<Document> iteratorBooks = findIterableBooks.iterator();
+            Iterator<Document> iteratorAuthors = findIterableAuthors.iterator();
+            Iterator<Document> iteratorSubjects = findIterableSubjects.iterator();
+
+            ArrayList<Document> books = new ArrayList<>();
+            while (iteratorBooks.hasNext()) {
+                books.add(iteratorBooks.next());
+            }
+            ArrayList<Document> authors = new ArrayList<>();
+            while (iteratorAuthors.hasNext()) {
+                authors.add(iteratorAuthors.next());
+            }
+            ArrayList<Document> subjects = new ArrayList<>();
+            while (iteratorSubjects.hasNext()) {
+                subjects.add(iteratorSubjects.next());
+            }
+            JSONObject dataJson = new JSONObject();
+            dataJson.put("books", books);
+            dataJson.put("authors", authors);
+            dataJson.put("subjects", subjects);
+            dataJson.put("code", 200);
+            return dataJson;
+        } catch (Exception e) {
+            System.out.println(e);
+            JSONObject dataJson = new JSONObject();
+            dataJson.put("desc",e.toString());
+            dataJson.put("code",500);
+            return dataJson;
+        }
+    }
+    public static JSONObject getSearchKeys(MongoClient mongoClient){
+        try {
+            MongoDatabase database = mongoClient.getDatabase(DB_NAME);
+            MongoCollection<Document> booksColl = database.getCollection(BOOKS);
+            MongoCollection<Document> authorsColl = database.getCollection(AUTHORS);
+            MongoCollection<Document> subjectsColl = database.getCollection(SUBJECTS);
+
+            FindIterable<Document> findIterableBooks = booksColl.find().projection(Projections.include("title"));
+            FindIterable<Document> findIterableAuthors = authorsColl.find().projection(Projections.include("author_name"));
+            FindIterable<Document> findIterableSubjects = subjectsColl.find().projection(Projections.include("subject"));
 
             Iterator<Document> iteratorBooks = findIterableBooks.iterator();
             Iterator<Document> iteratorAuthors = findIterableAuthors.iterator();

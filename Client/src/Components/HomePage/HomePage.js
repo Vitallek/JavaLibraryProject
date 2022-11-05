@@ -1,7 +1,8 @@
-import { Button, Card, CardContent, CardMedia, Grid, Link, MenuItem, Rating, Stack, TextField, Typography } from '@mui/material';
+import { Card, CardContent, CardMedia, Grid, Link, MenuItem, Rating, Stack, TextField, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import Fade from 'react-reveal/Fade'
 import axios from 'axios';
+import {Button as PrimeButton} from 'primereact/button'
 import "primeflex/primeflex.css";
 import 'primeicons/primeicons.css';
 import "primereact/resources/primereact.css";
@@ -196,6 +197,13 @@ const HomePage = () => {
             </Card>
             )}
         </Stack>
+      </Fade>
+      <Fade>
+        <Box display='flex' justifyContent='center' sx={{mb:10}}>
+          <PrimeButton variant='contained'>
+            Explore more
+          </PrimeButton>
+        </Box>
       </Fade>
     </Grid>
   )

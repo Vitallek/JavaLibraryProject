@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState, useMemo } from "react";
 import { BrowserRouter, Routes, Route, useRoutes, Outlet } from "react-router-dom";
-import axios from 'axios';
 import { Grid } from "@mui/material";
 import ProtectedRoutes from "./ProtectedRoutes";
 import { UserInfoContext } from "../UserInfoContext";
@@ -9,8 +8,8 @@ import AllFromBrandComponent from "./AllProductsComponent/AllFromBrandComponent"
 import UnderConstructionTemplate from "./UnderConstructionTemplate/UnderConstructionTemplate";
 import AboutCompany from "./Content/AboutCompany";
 import OrdersComponent from "./Orders/OrdersComponent";
-import { brandsMock } from './Utility/brandsMock'
 import TopNavComponent from "./Navigation/TopNavComponent";
+import SearchComponent from "./Search/SearchComponent";
 
 const CustomRoutes = ({ }) => {
   const props = useContext(UserInfoContext)
@@ -30,10 +29,10 @@ const CustomRoutes = ({ }) => {
       <Grid container item xs={12} direction='column' flexWrap='nowrap'>
         <Routes>
           <Route path='/' element={<HomePage/>} />
+          <Route path='/search' element={<SearchComponent />} />
 
 
-
-          <Route path='/repair-service' element={<UnderConstructionTemplate />} />
+          
           <Route path='/reviews' element={<UnderConstructionTemplate />} />
           <Route path='/news' element={<UnderConstructionTemplate />} />
           <Route path='/company-about' element={<AboutCompany />} />
