@@ -46,13 +46,11 @@ export const BookItemCard = ({ book, bookIndex }) => {
       </CardContent>
       <CardActions>
         {book.links?.length > 0 ? 
-        <Button onClick={_ => navigate(`/item${book.key}`)}>
+        <Button onClick={_ => navigate(`/book/${book.key}`)}>
           Explore
         </Button>
         :
-        <Button 
-          disabled
-        >
+        <Button onClick={_ => navigate(`/book/${book.key}`)} color='inherit'>
           Unavailable
         </Button>
         }

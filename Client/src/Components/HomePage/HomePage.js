@@ -86,10 +86,10 @@ const HomePage = () => {
             key={index} 
             sx={{ 
               minWidth: 200, 
+              minHeight: 400,
               display: 'flex', 
               flexDirection:'column', 
               justifyContent: 'space-between', 
-              minHeight: '350px', 
               m: 2 
               }}
             >

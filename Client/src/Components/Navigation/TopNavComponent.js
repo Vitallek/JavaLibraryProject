@@ -17,6 +17,12 @@ import { Box } from "@mui/system";
 
 const menu = [
   {
+    icon: <Box component='img' width={35} src='./pumpkin.svg'/>,
+    title: 'Events',
+    to: '/events',
+    items: []
+  },
+  {
     icon: <SearchRoundedIcon />,
     title: 'Search',
     to: '/search',

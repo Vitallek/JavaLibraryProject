@@ -152,11 +152,12 @@ public class MongoDBDriver {
             return dataJson;
         }
     }
-    public static JSONObject getAllFromCollectionQueried(MongoClient mongoClient, String coll, String query){
+    public static JSONObject getAllFromCollectionQueried(MongoClient mongoClient, String coll, String query, String field){
         try {
+            System.out.println(coll + " " + query + " " + field);
             MongoDatabase database = mongoClient.getDatabase(DB_NAME);
             MongoCollection<Document> collection = database.getCollection(coll);
-            FindIterable<Document> findIterable = collection.find(eq("title",query));
+            FindIterable<Document> findIterable = collection.find(eq(field,query));
             Iterator<Document> iterator = findIterable.iterator();
             ArrayList<Document> items = new ArrayList<>();
             while (iterator.hasNext()) {

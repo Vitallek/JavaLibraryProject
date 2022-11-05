@@ -3,8 +3,13 @@ package org.package1;
 import com.google.gson.Gson;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.json.JSONObject;
 import org.package1.utility.User;
+
+import java.io.IOException;
 
 import static spark.Spark.*;
 
@@ -39,7 +44,9 @@ public class Main {
             response.type("application/json");
         });
     }
-
+    public static int getRandomNumber(int min, int max) {
+        return (int) ((Math.random() * (max - min)) + min);
+    }
     public static void main(String[] args) {
         System.out.println("server runs at port " + port);
         port(port);
@@ -69,12 +76,13 @@ public class Main {
             res.status(response.getInt( "code"));
             return response;
         });
-        get("/get-with-query/:collection/:query", (req, res) -> {
+        get("/get-with-query/:collection/:query/:field", (req, res) -> {
             System.out.println(req.params(":query").toLowerCase());
             JSONObject response = MongoDBDriver.getAllFromCollectionQueried(
                     mongoClient,
                     req.params(":collection").toLowerCase(),
-                    req.params(":query")
+                    req.params(":query"),
+                    req.params(":field")
             );
             res.status(response.getInt( "code"));
             return response;
@@ -88,6 +96,27 @@ public class Main {
             JSONObject response = MongoDBDriver.getTopRatedData(mongoClient);
             res.status(response.getInt( "code"));
             return response;
+        });
+        get("get-images/:query", (req, res) -> {
+            System.out.println(req.params(":query"));
+
+            final OkHttpClient client = new OkHttpClient();
+
+            Request request = new Request.Builder()
+//                    .url("https://api.unsplash.com/search/photos?query=" + req.params(":query") + " car&per_page=30&page="+ getRandomNumber(1,1))
+                    .url("https://api.unsplash.com/search/photos?query=" + req.params(":query") + " car&per_page=30&page=1")
+                    .header("accept", "application/json")
+                    .header("Authorization", "Client-ID QmOcgkOnjiOK3jwyuiPOk3BA8rIVDtnskS73GnXJRK8")
+                    .build();
+
+            try (Response response = client.newCall(request).execute()) {
+                if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+                res.status(200);
+                return new JSONObject().put("data", response.body().string());
+            } catch (IOException e) {
+                e.printStackTrace();
+                return new JSONObject().put("error", e.toString());
+            }
         });
         delete("delete-selected-subjects", (req, res) -> {
             JSONObject response = MongoDBDriver.deleteSelectedFromSubjects(mongoClient,req.body());

@@ -14,6 +14,7 @@ const trending = JSON.parse(fs.readFileSync('./trending_forever.json'))
 let books = []
 let authors = []
 let subjects = []
+let events = []
 const randomIntFromInterval = (min, max) => { // min and max included 
   return Math.floor(Math.random() * (max - min + 1) + min)
 }
@@ -65,7 +66,8 @@ const generate = async () => {
     if (data.subjects !== undefined) subject = data.subjects[0]
     if (data.links !== undefined) links = [...data.links]
     books.push({
-      key: item.key,
+      type: item.key.slice(1,6),
+      key: item.key.slice(7, item.key.length),
       title: item.title + ' (' + item.first_publish_year +')',
       first_publish_year: item.first_publish_year,
       author_key: item.author_key[0],
@@ -92,8 +94,18 @@ const generate = async () => {
       })
     }
   }
+  const files = fs.readdirSync('./scary')
+  for (const file of files){
+    let text = fs.readFileSync(`./scary/${file}`).toLocaleString()
+    events.push({
+      event: 'Halloween',
+      title: file,
+      data: text
+    })
+  }
   fs.writeFileSync('./books.json', JSON.stringify(books, null, '\t'))
   fs.writeFileSync('./subjects.json', JSON.stringify(subjects, null, '\t'))
+  fs.writeFileSync('./events.json', JSON.stringify(events, null, '\t'))
   createDB()
 }
 const createDB = async () => {
@@ -115,6 +127,11 @@ const createDB = async () => {
   collOfBooks.deleteMany()
   await collOfBooks.createIndex({ email: 1 })
   await collOfBooks.createIndex({ name: 1 })
+
+  const eventsColl = db.collection('events')
+  await eventsColl.createIndex({ event: 1 })
+  eventsColl.deleteMany()
+  await eventsColl.insertMany(events)
 
   const authorsColl = db.collection('authors')
   authorsColl.deleteMany()
