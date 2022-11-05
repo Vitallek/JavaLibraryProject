@@ -29,7 +29,7 @@ const HomePage = () => {
   }, [])
 
   return (
-    <Grid item xs={12} display='flex' direction='column'>
+    <Grid container item xs={12} display='flex' direction='column'>
       <Fade>
         <Typography
           sx={{ m: 3,display: 'flex', justifyContent: 'center' }}

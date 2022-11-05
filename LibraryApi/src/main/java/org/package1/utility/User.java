@@ -2,12 +2,11 @@ package org.package1.utility;
 
 public class User {
     private String email;
-    private String phone;
     private String name;
     private String password;
     private String role;
 
-    public User(String email, String phone, String name, String password, String token,String role) {
+    public User(String email, String name, String password,String role) {
         this.email = email;
         this.name = name;
         this.password = password;

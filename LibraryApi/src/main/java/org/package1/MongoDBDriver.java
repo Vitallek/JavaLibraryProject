@@ -45,7 +45,7 @@ public class MongoDBDriver {
                         .append("password", user.getPassword())
                         .append("role", user.getRole()));
                 JSONObject dataJson = new JSONObject();
-                dataJson.put("desc",result.getInsertedId().toString());
+                dataJson.put("data",new JSONObject(user));
                 dataJson.put("code",200);
                 return dataJson;
             } catch (MongoException me) {
@@ -80,10 +80,12 @@ public class MongoDBDriver {
                 return dataJson;
             }
             JSONObject dataJson = new JSONObject();
-            dataJson.put("desc","successful");
-            dataJson.put("email",doc.getString("email"));
-            dataJson.put("name",doc.getString("name"));
-            dataJson.put("role",doc.getString("role"));
+            JSONObject user = new JSONObject();
+            user.put("email",doc.getString("email"));
+            user.put("name",doc.getString("name"));
+            user.put("password",doc.getString("password"));
+            user.put("role",doc.getString("role"));
+            dataJson.put("data",user);
             dataJson.put("code",200);
             return dataJson;
         } catch (Exception e) {
@@ -94,13 +96,14 @@ public class MongoDBDriver {
             return dataJson;
         }
     }
-    public static JSONObject cookieLogin(MongoClient mongoClient, String email, String password) {
+    public static JSONObject cookieLogin(MongoClient mongoClient, String data) {
         try {
+            JSONObject dataJSON = new JSONObject(data);
             MongoDatabase database = mongoClient.getDatabase(DB_NAME);
             MongoCollection<Document> collection = database.getCollection(USERS);
-            Document doc = collection.find(eq("email", email)).first();
+            Document doc = collection.find(eq("email", dataJSON.getString("email"))).first();
             if (doc != null) {
-                if(Objects.equals(doc.getString("password"), password)){
+                if(Objects.equals(doc.getString("password"), dataJSON.getString("password"))){
                     JSONObject dataJson = new JSONObject();
                     dataJson.put("desc","successful");
                     dataJson.put("email",doc.getString("email"));

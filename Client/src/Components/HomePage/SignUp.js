@@ -10,14 +10,13 @@ import { Toast } from 'primereact/toast';
 import { Container } from '@mui/system';
 
 const enterKey = 13
-const handleEnterPush = (e, passwordInput, emailInput, phoneInput, nameInput, toast) => {
-  if (e.keyCode === enterKey) RegisterOnClick(passwordInput, emailInput, phoneInput, nameInput, toast)
+const handleEnterPush = (e, passwordInput, emailInput, nameInput, toast) => {
+  if (e.keyCode === enterKey) RegisterOnClick(passwordInput, emailInput, nameInput, toast)
 }
 
-const RegisterOnClick = (passwordInput, emailInput, phoneInput, nameInput, toast) => {
+const RegisterOnClick = (passwordInput, emailInput, nameInput, toast) => {
   if(passwordInput.length === 0 ||
     emailInput.length === 0 ||
-    phoneInput.length === 0 ||
     nameInput.length === 0) {
       toast.current.show({ severity: 'error', summary: 'Ошибка', detail: 'Остались пустые поля' })
       return
@@ -27,7 +26,6 @@ const RegisterOnClick = (passwordInput, emailInput, phoneInput, nameInput, toast
     axios.post(`http://${process.env.REACT_APP_SERVER_ADDR}/register`, {
       email: emailInput,
       password: passwordHash,
-      phone: phoneInput,
       name: nameInput,
       role: 'user'
     }).then(response => {
@@ -38,9 +36,7 @@ const RegisterOnClick = (passwordInput, emailInput, phoneInput, nameInput, toast
         return
       }
       if (responseJSON.code === 200) {
-        Cookies.set('token', JSON.stringify({
-          token: responseJSON.token,
-        }))
+        Cookies.set('credentials', JSON.stringify(responseJSON.data))
         window.location.reload()
       }
     })
@@ -50,7 +46,6 @@ const RegisterOnClick = (passwordInput, emailInput, phoneInput, nameInput, toast
 const SignUp = ({ switchForm }) => {
   const emailInput = useRef(null)
   const passwordInput = useRef(null)
-  const phoneInput = useRef(null)
   const nameInput = useRef(null)
   const toast = useRef(null)
   return (
@@ -68,7 +63,7 @@ const SignUp = ({ switchForm }) => {
         <Box component="form" noValidate sx={{ mt: 1 }}>
           <TextField
             onKeyDown={(e) => {
-              handleEnterPush(e, passwordInput.current.value, emailInput.current.value, phoneInput.current.value, nameInput.current.value, toast)
+              handleEnterPush(e, passwordInput.current.value, emailInput.current.value, nameInput.current.value, toast)
             }}
             margin="normal"
             required
@@ -80,7 +75,7 @@ const SignUp = ({ switchForm }) => {
           />
           <TextField
             onKeyDown={(e) => {
-              handleEnterPush(e, passwordInput.current.value, emailInput.current.value, phoneInput.current.value, nameInput.current.value, toast)
+              handleEnterPush(e, passwordInput.current.value, emailInput.current.value, nameInput.current.value, toast)
             }} margin="normal"
             required
             fullWidth
@@ -91,7 +86,7 @@ const SignUp = ({ switchForm }) => {
           />
           <TextField
             onKeyDown={(e) => {
-              handleEnterPush(e, passwordInput.current.value, emailInput.current.value, phoneInput.current.value, nameInput.current.value, toast)
+              handleEnterPush(e, passwordInput.current.value, emailInput.current.value, nameInput.current.value, toast)
             }} margin="normal"
             required
             fullWidth
@@ -100,23 +95,12 @@ const SignUp = ({ switchForm }) => {
             name="name"
             type="name"
           />
-          <TextField
-            onKeyDown={(e) => {
-              handleEnterPush(e, passwordInput.current.value, emailInput.current.value, phoneInput.current.value, nameInput.current.value, toast)
-            }} margin="normal"
-            required
-            fullWidth
-            inputRef={phoneInput}
-            label="Телефон"
-            name="phone"
-            type="phone"
-          />
           <Button
             onClick={(e) => { 
               RegisterOnClick(
                 passwordInput.current.value, 
                 emailInput.current.value, 
-                phoneInput.current.value, 
+               
                 nameInput.current.value,
                 toast) 
             }}

@@ -10,9 +10,9 @@ const App = () => {
   let [contextObject, setContextObject] = useState({})
 
   useEffect(() => {
-    if(typeof Cookies.get('token') !== 'undefined'){
-      let cookies = JSON.parse(Cookies.get('token'))
-      axios.post(`http://${process.env.REACT_APP_SERVER_ADDR}/token-login`, cookies.token).then(response => {
+    if(typeof Cookies.get('credentials') !== 'undefined'){
+      let cookies = JSON.parse(Cookies.get('credentials'))
+      axios.post(`http://${process.env.REACT_APP_SERVER_ADDR}/cookie-login`, cookies).then(response => {
         console.log(response.data)
         const responseJSON = response.data
         setContextObject({
@@ -20,7 +20,6 @@ const App = () => {
           role: responseJSON.role, 
           email:responseJSON.email, 
           name:responseJSON.name,
-          phone: responseJSON.phone
         })
         // if(responseJSON.msg.code === 200) setAuthorized(true)
       })

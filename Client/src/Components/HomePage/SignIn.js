@@ -38,9 +38,7 @@ const LogInOnClick = (passwordInput, emailInput) => {
         return
       }
       if (responseJSON.code === 200) {
-        Cookies.set('token', JSON.stringify({
-          token: responseJSON.token,
-        }))
+        Cookies.set('credentials', JSON.stringify(responseJSON.data))
         window.location.reload()
       }
     })

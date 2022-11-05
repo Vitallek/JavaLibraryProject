@@ -55,10 +55,8 @@ public class Main {
             System.out.println("login from " + user.getEmail());
             return MongoDBDriver.login(mongoClient,user.getEmail(), user.getPassword());
         });
-        post("/token-login", (req, res) -> {
-            String token = req.body();
-            User user = gson.fromJson(req.body(), User.class);
-            return MongoDBDriver.cookieLogin(mongoClient,user.getEmail(), user.getPassword());
+        post("/cookie-login", (req, res) -> {
+            return MongoDBDriver.cookieLogin(mongoClient, req.body());
         });
         get("/get-all/:collection", (req, res) -> {
             JSONObject response = MongoDBDriver.getAllFromCollection(mongoClient,req.params(":collection").toLowerCase());

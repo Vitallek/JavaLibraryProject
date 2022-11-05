@@ -69,8 +69,8 @@ const CustomRoutes = ({ }) => {
               element={<AllFromBrandComponent />}
             />
           </Route>
-          {props.role === 'admin' || props.role === 'head_cheater' ?
-            <Route path='/adm/*' element={<ProtectedRoutes />} /> :
+          {props.role === 'admin' ?
+            <Route path='/moderation/*' element={<ProtectedRoutes />} /> :
             null}
         </Routes>
       </Grid>

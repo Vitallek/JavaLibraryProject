@@ -4,6 +4,8 @@ import { Menu, MenuItem, Button, Stack, ListItemButton, ListItemIcon, ListItemTe
 import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded';
 import LoginRoundedIcon from '@mui/icons-material/LoginRounded';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
+import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
+import AutoStoriesRoundedIcon from '@mui/icons-material/AutoStoriesRounded';
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 import DirectionsCarRoundedIcon from '@mui/icons-material/DirectionsCarRounded';
 import SupervisorAccountRoundedIcon from '@mui/icons-material/SupervisorAccountRounded';
@@ -11,41 +13,31 @@ import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded';
 import '@fontsource/roboto/400.css';
 import SignInDialog from "../HomePage/SignInDialog";
 import Cookies from "js-cookie";
+import { Box } from "@mui/system";
 
 const menu = [
   {
-    // icon: <HomeRoundedIcon />,
-    title: 'Автомобили',
-    to: '/reviews',
+    icon: <SearchRoundedIcon />,
+    title: 'Search',
+    to: '/search',
     items: []
   },
   {
     // icon: <HomeRoundedIcon />,
-    title: 'Обзоры',
+    title: 'About',
     to: '/news',
     items: []
   },
-  // {
-  //   // icon: <HomeRoundedIcon />,
-  //   title: 'Продать автомобиль',
-  //   to: '/sell-a-car',
-  //   items: []
-  // },
+
   {
     // icon: <HomeRoundedIcon />,
-    title: 'Ремонт и сервис',
-    to: '/repair-service',
-    items: []
-  },
-  {
-    // icon: <HomeRoundedIcon />,
-    title: 'О компании',
+    title: 'Account',
     to: '/company-about',
     items: []
   }
 ]
 const Logout = () => {
-  Cookies.remove('token')
+  Cookies.remove('credentials')
   window.location.reload()
 }
 const CustomMenuItem = ({ item }) => {
@@ -61,24 +53,24 @@ const SingleLevel = ({ item }) => {
   return (
     <ListItemButton onClick={() => handleClick(item.to)}>
       <ListItemIcon style={{ minWidth: 26 }}>{item.icon}</ListItemIcon>
-      <ListItemText style={{ minWidth: 26, textAlign:'center' }} primary={item.title} />
+      <ListItemText style={{ minWidth: 26, textAlign: 'center' }} primary={item.title} />
     </ListItemButton>
   )
 }
-const handleOpenMenu = (event,setAnchorEl) => {
+const handleOpenMenu = (event, setAnchorEl) => {
   setAnchorEl(event.currentTarget)
 }
 const handleCloseMenu = (setAnchorEl) => {
   setAnchorEl(null)
 }
-const handleOpenSignIn = (setDialogOpen,setAnchorEl) => {
+const handleOpenSignIn = (setDialogOpen, setAnchorEl) => {
   setDialogOpen({
     isOpen: true,
     type: 0
   })
   setAnchorEl(null)
 }
-const handleOpenReg = (setDialogOpen,setAnchorEl) => {
+const handleOpenReg = (setDialogOpen, setAnchorEl) => {
   setDialogOpen({
     isOpen: true,
     type: 1
@@ -90,7 +82,7 @@ const TopNavComponent = ({ authorized, role }) => {
   const isMenuOpened = Boolean(anchorEl)
   const navigate = useNavigate()
   const [dialogOpen, setDialogOpen] = useState({ isOpen: false, type: 0 })
- 
+
   const AuthMenu = () => {
     return (
       <Menu
@@ -102,7 +94,7 @@ const TopNavComponent = ({ authorized, role }) => {
           'aria-labelledby': 'basic-button',
         }}
       >
-        <MenuItem onClick={() => {alert('todo')}}>
+        <MenuItem onClick={() => { alert('todo') }}>
           <ListItemIcon>
             <AccountCircleRoundedIcon />
           </ListItemIcon>
@@ -110,7 +102,7 @@ const TopNavComponent = ({ authorized, role }) => {
             Ваш аккаунт
           </ListItemText>
         </MenuItem>
-        {role === 'admin' || role === 'head_cheater' ? 
+        {role === 'admin' || role === 'head_cheater' ?
           <MenuItem onClick={() => {
             handleCloseMenu(setAnchorEl)
             navigate('/adm')
@@ -121,9 +113,9 @@ const TopNavComponent = ({ authorized, role }) => {
             <ListItemText>
               Админка
             </ListItemText>
-          </MenuItem>: null
+          </MenuItem> : null
         }
-        <MenuItem onClick={() => {alert('todo')}}>
+        <MenuItem onClick={() => { alert('todo') }}>
           <ListItemIcon>
             <FavoriteRoundedIcon />
           </ListItemIcon>
@@ -170,7 +162,7 @@ const TopNavComponent = ({ authorized, role }) => {
         >
           Меню
         </Typography>
-        <MenuItem onClick={() => handleOpenSignIn(setDialogOpen,setAnchorEl)}>
+        <MenuItem onClick={() => handleOpenSignIn(setDialogOpen, setAnchorEl)}>
           <ListItemIcon>
             <LoginRoundedIcon />
           </ListItemIcon>
@@ -178,7 +170,7 @@ const TopNavComponent = ({ authorized, role }) => {
             Войти
           </ListItemText>
         </MenuItem>
-        <MenuItem onClick={() => handleOpenReg(setDialogOpen,setAnchorEl)}>
+        <MenuItem onClick={() => handleOpenReg(setDialogOpen, setAnchorEl)}>
           <ListItemIcon>
             <AccountCircleRoundedIcon />
           </ListItemIcon>
@@ -191,20 +183,36 @@ const TopNavComponent = ({ authorized, role }) => {
   }
 
   return (
-    <Stack direction='row' spacing={2}>
-      {menu.map((item, key) => <CustomMenuItem key={key} item={item} />)}
-      <Button
-        startIcon={<MoreVertRoundedIcon />}
-        sx={{ color: 'black' }}
-        id="basic-button"
-        aria-controls={isMenuOpened ? 'basic-menu' : undefined}
-        aria-haspopup="true"
-        aria-expanded={isMenuOpened ? 'true' : undefined}
-        onClick={(e) => handleOpenMenu(e, setAnchorEl)}
+    <Stack direction='row' spacing={2} display='flex' justifyContent='space-between'>
+      <Box
+        onClick={() => navigate('/')}
+        sx={{
+          cursor: 'pointer',
+          height: '100%',
+          p: 1
+          // width: '100%',
+          // maxHeight: { xs: 233, md: 167 },
+          // maxWidth: { xs: 350, md: 250 },
+        }}
       >
-      </Button>
-      {authorized ? <AuthMenu /> : <UnAuthMenu />}
-      <SignInDialog dialogOpen={dialogOpen} setOpen={setDialogOpen} />
+        <AutoStoriesRoundedIcon color="action" fontSize="large" />
+      </Box>
+      <Stack direction='row' spacing={2}>
+
+        {menu.map((item, key) => <CustomMenuItem key={key} item={item} />)}
+        <Button
+          startIcon={<MoreVertRoundedIcon />}
+          sx={{ color: 'black' }}
+          id="basic-button"
+          aria-controls={isMenuOpened ? 'basic-menu' : undefined}
+          aria-haspopup="true"
+          aria-expanded={isMenuOpened ? 'true' : undefined}
+          onClick={(e) => handleOpenMenu(e, setAnchorEl)}
+        >
+        </Button>
+        {authorized ? <AuthMenu /> : <UnAuthMenu />}
+        <SignInDialog dialogOpen={dialogOpen} setOpen={setDialogOpen} />
+      </Stack>
     </Stack>
   )
 }

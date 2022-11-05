@@ -5,7 +5,7 @@ import AdminMainComponent from "./Admin/AdminMainComponent";
 
 const ProtectedRoutes = () => (
   <Routes>
-    <Route path="/" element={<AdminMainComponent />} />
+    <Route path="/moderation" element={<AdminMainComponent />} />
   </Routes>
 )
 
