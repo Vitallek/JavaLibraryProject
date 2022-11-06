@@ -36,7 +36,9 @@ const RegisterOnClick = (passwordInput, emailInput, nameInput, toast) => {
         return
       }
       if (responseJSON.code === 200) {
-        Cookies.set('credentials', JSON.stringify(responseJSON.data))
+        Cookies.set('token', JSON.stringify({
+          token: responseJSON.token,
+        }))
         window.location.reload()
       }
     })
@@ -100,7 +102,6 @@ const SignUp = ({ switchForm }) => {
               RegisterOnClick(
                 passwordInput.current.value, 
                 emailInput.current.value, 
-               
                 nameInput.current.value,
                 toast) 
             }}
@@ -110,13 +111,6 @@ const SignUp = ({ switchForm }) => {
           >
             {'Зарегистрироваться'}
           </Button>
-          {/* <Grid container justifyContent="flex-end">
-            <Grid item>
-              <Button variant="outlined" onClick={() => {switchForm(prev => ({...prev, type: 0}))}}>
-                {"Уже есть аккаунт?"}
-              </Button>
-            </Grid>
-          </Grid> */}
         </Box>
       </Box>
     </Container>

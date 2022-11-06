@@ -38,7 +38,9 @@ const LogInOnClick = (passwordInput, emailInput) => {
         return
       }
       if (responseJSON.code === 200) {
-        Cookies.set('credentials', JSON.stringify(responseJSON.data))
+        Cookies.set('token', JSON.stringify({
+          token: responseJSON.token,
+        }))
         window.location.reload()
       }
     })
@@ -81,13 +83,6 @@ const SignIn = () => {
             name="password"
             type="password"
           />
-          {/* <FormControlLabel
-              control={
-              <Checkbox   inputRef={rememberMe} 
-                          color="primary" />
-              }
-              label="Запомнить меня"
-            /> */}
           <Button
             onClick={() => LogInOnClick(passwordInput.current.value, emailInput.current.value)}
             fullWidth
@@ -96,18 +91,6 @@ const SignIn = () => {
           >
             {'Войти'}
           </Button>
-          {/* <Grid container>
-            <Grid item xs={6}>
-              <Button variant="outlined" onClick={() => { alert('Telegram @Vitallek') }}>
-                {'Забыли пароль?'}
-              </Button>
-            </Grid>
-            <Grid item xs={6}>
-              <Button variant="outlined" onClick={() => {switchForm(prev => ({...prev, type: 1}))}}>
-                {"Зарегистрироваться"}
-              </Button>
-            </Grid>
-          </Grid> */}
         </Box>
       </Box>
     </Container>

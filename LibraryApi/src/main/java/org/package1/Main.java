@@ -55,6 +55,7 @@ public class Main {
         post("/register", (req, res) -> {
             User user = gson.fromJson(req.body(), User.class);
             System.out.println("register from " + user.getEmail());
+            JWTDriver.createToken(user);
             return MongoDBDriver.register(mongoClient,user);
         });
         post("/login", (req, res) -> {
@@ -63,7 +64,10 @@ public class Main {
             return MongoDBDriver.login(mongoClient,user.getEmail(), user.getPassword());
         });
         post("/cookie-login", (req, res) -> {
-            return MongoDBDriver.cookieLogin(mongoClient, req.body());
+            String token = req.body();
+            String payload = JWTDriver.decodeToken(token);
+            User user = gson.fromJson(payload, User.class);
+            return MongoDBDriver.cookieLogin(mongoClient,user.getEmail(), user.getPassword());
         });
         get("/get-all/:collection/:take/:skip", (req, res) -> {
             System.out.println(req.params(":collection"));

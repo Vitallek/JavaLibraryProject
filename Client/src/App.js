@@ -10,8 +10,8 @@ const App = () => {
   let [contextObject, setContextObject] = useState({})
 
   useEffect(() => {
-    if(typeof Cookies.get('credentials') !== 'undefined'){
-      let cookies = JSON.parse(Cookies.get('credentials'))
+    if(typeof Cookies.get('token') !== 'undefined'){
+      let cookies = JSON.parse(Cookies.get('token'))
       axios.post(`http://${process.env.REACT_APP_SERVER_ADDR}/cookie-login`, cookies).then(response => {
         console.log(response.data)
         const responseJSON = response.data

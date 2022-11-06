@@ -5,12 +5,20 @@ public class User {
     private String name;
     private String password;
     private String role;
-
-    public User(String email, String name, String password,String role) {
+    private String token;
+    public User(String email, String name, String password, String token,String role) {
         this.email = email;
         this.name = name;
         this.password = password;
         this.role = role;
+        if(token == null) this.token = "";
+        else this.token = token;
+    }
+    public String getToken() {
+        return token;
+    }
+    public void setToken(String token) {
+        this.token = token;
     }
     public String getEmail() {
         return email;

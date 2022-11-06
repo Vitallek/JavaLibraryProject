@@ -31,8 +31,7 @@ public class MongoDBDriver {
     public static final String AUTHORS = "authors";
     public static final String SUBJECTS = "subjects";
     public static final String BOOKS = "books";
-    public static final String BOOKCOLLS = "bookcollections";
-    public static JSONObject register(MongoClient mongoClient, User user) {
+    public static JSONObject register(MongoClient mongoClient,User user) {
         try {
             MongoDatabase database = mongoClient.getDatabase(DB_NAME);
             MongoCollection<Document> collection = database.getCollection(USERS);
@@ -44,14 +43,8 @@ public class MongoDBDriver {
                 return dataJson;
             }
             try {
-                InsertOneResult result = collection.insertOne(new Document()
-                        .append("_id", new ObjectId())
-                        .append("email", user.getEmail())
-                        .append("name", user.getName())
-                        .append("password", user.getPassword())
-                        .append("role", user.getRole()));
                 JSONObject dataJson = new JSONObject();
-                dataJson.put("data",new JSONObject(user));
+                dataJson.put("token",user.getToken());
                 dataJson.put("code",200);
                 return dataJson;
             } catch (MongoException me) {
@@ -68,7 +61,35 @@ public class MongoDBDriver {
             return dataJson;
         }
     }
-    public static JSONObject login(MongoClient mongoClient, String email, String password) {
+    public static JSONObject login(MongoClient mongoClient,String email, String password) {
+        try {
+            MongoDatabase database = mongoClient.getDatabase(DB_NAME);
+            MongoCollection<Document> collection = database.getCollection(USERS);
+            Document doc = collection.find(eq("email", email)).first();
+            if (doc != null) {
+                if(Objects.equals(doc.getString("password"), password)){
+                    JSONObject dataJson = new JSONObject(doc);
+                    dataJson.put("code",200);
+                    return dataJson;
+                }
+                JSONObject dataJson = new JSONObject();
+                dataJson.put("desc","token mismatch");
+                dataJson.put("code",500);
+                return dataJson;
+            }
+            JSONObject dataJson = new JSONObject();
+            dataJson.put("desc","no user found");
+            dataJson.put("code",409);
+            return dataJson;
+        } catch (Exception e) {
+            System.out.println(e);
+            JSONObject dataJson = new JSONObject();
+            dataJson.put("desc",e.toString());
+            dataJson.put("code",500);
+            return dataJson;
+        }
+    }
+    public static JSONObject cookieLogin(MongoClient mongoClient,String email, String password) {
         try {
             MongoDatabase database = mongoClient.getDatabase(DB_NAME);
             MongoCollection<Document> collection = database.getCollection(USERS);
@@ -85,33 +106,8 @@ public class MongoDBDriver {
                 dataJson.put("code",401);
                 return dataJson;
             }
-            return new JSONObject(doc);
-        } catch (Exception e) {
-            System.out.println(e);
-            JSONObject dataJson = new JSONObject();
-            dataJson.put("desc",e.toString());
-            dataJson.put("code",500);
-            return dataJson;
-        }
-    }
-    public static JSONObject cookieLogin(MongoClient mongoClient, String data) {
-        try {
-            JSONObject dataJSON = new JSONObject(data);
-            MongoDatabase database = mongoClient.getDatabase(DB_NAME);
-            MongoCollection<Document> collection = database.getCollection(USERS);
-            Document doc = collection.find(eq("email", dataJSON.getString("email"))).first();
-            if (doc != null) {
-                if(Objects.equals(doc.getString("password"), dataJSON.getString("password"))){
-                    return new JSONObject(doc);
-                }
-                JSONObject dataJson = new JSONObject();
-                dataJson.put("desc","password incorrect");
-                dataJson.put("code",500);
-                return dataJson;
-            }
-            JSONObject dataJson = new JSONObject();
-            dataJson.put("desc","no user found");
-            dataJson.put("code",409);
+            JSONObject dataJson = new JSONObject(doc);
+            dataJson.put("code",200);
             return dataJson;
         } catch (Exception e) {
             System.out.println(e);
