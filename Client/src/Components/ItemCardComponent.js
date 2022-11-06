@@ -8,9 +8,8 @@ import axios from 'axios'
 import { useNavigate } from 'react-router-dom';
 
 const width = '200px'
-export const BookItemCard = ({ book, bookIndex }) => {
+export const BookItemCard = ({ book }) => {
   const navigate = useNavigate()
-  const toast = useRef(null)
   return (
     <Card
       sx={{
@@ -23,7 +22,6 @@ export const BookItemCard = ({ book, bookIndex }) => {
         m: 2
       }}
     >
-      <Toast ref={toast} position="bottom-right" />
       <CardMedia
         component="img"
         height={200}
@@ -57,8 +55,7 @@ export const BookItemCard = ({ book, bookIndex }) => {
     </Card>
   );
 }
-export const AuthorItemCard = ({ author, authorIndex }) => {
-  const toast = useRef(null)
+export const AuthorItemCard = ({ author }) => {
   return (
     <Card
       sx={{
@@ -88,8 +85,7 @@ export const AuthorItemCard = ({ author, authorIndex }) => {
     </Card>
   );
 }
-export const SubjectItemCard = ({ subject, subjectIndex }) => {
-  const toast = useRef(null)
+export const SubjectItemCard = ({ subject }) => {
   return (
     <Card
       sx={{

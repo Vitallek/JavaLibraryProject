@@ -83,7 +83,7 @@ const HomePage = () => {
         </Typography>
         <Stack direction='row' display='flex' justifyContent='center' alignItems='center' spacing={2} sx={{ p: 5, pt: 1 }}>
           {content.books?.sort((el1, el2) => el2.rate - el1.rate).slice(0, 5).map((book, index) =>
-            <BookItemCard key={index} book={book} bookIndex={index}/>
+            <BookItemCard key={index} book={book}/>
           )}
         </Stack>
       </Fade>
@@ -98,7 +98,7 @@ const HomePage = () => {
         </Typography>
         <Stack direction='row' display='flex' justifyContent='center' alignItems='center' spacing={2} sx={{ p: 5, pt: 1 }}>
           {content.authors?.sort((el1, el2) => el2.rate - el1.rate).slice(0, 5).map((author, index) =>
-            <AuthorItemCard key={index} author={author} authorIndex={index}/>
+            <AuthorItemCard key={index} author={author}/>
           )}
         </Stack>
       </Fade>
@@ -113,7 +113,7 @@ const HomePage = () => {
         </Typography>
         <Stack direction='row' display='flex' justifyContent='center' alignItems='center' spacing={2} sx={{ p: 5, pt: 1 }}>
           {content.subjects?.sort((el1, el2) => el2.rate - el1.rate).slice(0, 5).map((subject, index) =>
-            <SubjectItemCard key={index} subject={subject} subjectIndex={index}/>
+            <SubjectItemCard key={index} subject={subject}/>
           )}
         </Stack>
       </Fade>

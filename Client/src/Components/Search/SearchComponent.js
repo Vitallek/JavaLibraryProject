@@ -18,7 +18,8 @@ const requestContent = async (setDisplayedContent, selectedField, take, skip) =>
   axios.get(`http://${process.env.REACT_APP_SERVER_ADDR}/get-all/${selectedField.toLocaleLowerCase()}/${take}/${take * skip}`)
     .then(res => {
       console.log(res.data)
-      if(selectedField.toLocaleLowerCase() === 'books') setDisplayedContent(res.data.data.slice().sort((el1,el2) => el2.links.length - el1.links.length))
+      if(selectedField.toLocaleLowerCase() === 'books') return setDisplayedContent(res.data.data.slice().sort((el1,el2) => el2.links.length - el1.links.length))
+      return setDisplayedContent(res.data.data)
     })
     .catch(err => alert('can`t get data'))
 }
@@ -33,9 +34,6 @@ const SearchComponent = () => {
     take: 10,
     skip: 0
   })
-  const handleChangePage = (value) => {
-    setSkipTakeParams(prev => ({ ...prev, skip: value }))
-  }
   const searchByKey = (e, collection) => {
     if (e.key !== 'Enter') return
     axios.get(`http://${process.env.REACT_APP_SERVER_ADDR}/get-with-query/${collection}/${e.target.value}/title`)
@@ -44,6 +42,9 @@ const SearchComponent = () => {
       })
       .catch(err => alert('can`t get data'))
   }
+  useEffect(() => {
+    console.log(displayedContent)
+  }, [displayedContent])
 
   useEffect(() => {
     requestContent(setDisplayedContent, selectedField, skipTakeParams.take, skipTakeParams.skip)
@@ -115,21 +116,18 @@ const SearchComponent = () => {
                 <BookItemCard
                   key={itemIndex}
                   book={item}
-                  bookIndex={itemIndex}
                 />
               )
               if (selectedField.toLocaleLowerCase() === 'authors') return (
                 <AuthorItemCard
                   key={itemIndex}
                   author={item}
-                  authorIndex={itemIndex}
                 />
               )
               if (selectedField.toLocaleLowerCase() === 'subjects') return (
                 <SubjectItemCard
                   key={itemIndex}
                   subject={item}
-                  subjectIndex={itemIndex}
                 />
               )
             })}
