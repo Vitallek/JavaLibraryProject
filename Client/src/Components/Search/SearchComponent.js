@@ -38,7 +38,7 @@ const SearchComponent = () => {
   }
   const searchByKey = (e, collection) => {
     if (e.key !== 'Enter') return
-    axios.get(`http://${process.env.REACT_APP_SERVER_ADDR}/get-with-query/${collection}/${e.target.value}`)
+    axios.get(`http://${process.env.REACT_APP_SERVER_ADDR}/get-with-query/${collection}/${e.target.value}/title`)
       .then(res => {
         setDisplayedContent(res.data.data)
       })

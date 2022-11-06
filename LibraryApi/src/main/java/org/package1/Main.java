@@ -143,6 +143,11 @@ public class Main {
             res.status(response.getInt("code"));
             return response;
         });
+        put("/place-comment/:bookkey",(req,res) -> {
+            JSONObject response = MongoDBDriver.placeComment(mongoClient,req.params(":bookkey"), req.body());
+            res.status(response.getInt("code"));
+            return response;
+        });
         put("/update-book",(req,res) -> {
             JSONObject response = MongoDBDriver.updateBook(mongoClient,req.body());
             res.status(response.getInt("code"));

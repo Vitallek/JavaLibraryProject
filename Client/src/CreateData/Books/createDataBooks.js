@@ -75,6 +75,7 @@ const generate = async () => {
       description: data.description,
       subject: subject,
       links: links,
+      comments: [],
       rate: randomIntFromInterval(30, 50) / 10,
       image: bookPhotos[randomIntFromInterval(0, bookPhotos.length - 1)].urls.regular
     })

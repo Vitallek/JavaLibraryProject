@@ -2,7 +2,7 @@ import { Card, CardContent, CardMedia, Grid, Link, MenuItem, Rating, Stack, Swit
 import { Box } from '@mui/system';
 import Fade from 'react-reveal/Fade'
 import axios from 'axios';
-import {Button as PrimeButton} from 'primereact/button'
+import { Button as PrimeButton } from 'primereact/button'
 import "primeflex/primeflex.css";
 import 'primeicons/primeicons.css';
 import "primereact/resources/primereact.css";
@@ -10,6 +10,7 @@ import 'primereact/resources/themes/lara-light-indigo/theme.css';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import NavComponent from './StoryNavComponent';
+import PetsIcon from '@mui/icons-material/Pets';
 
 const EventsComponent = () => {
   const [content, setContent] = useState([])
@@ -52,43 +53,39 @@ const EventsComponent = () => {
     <Fade>
       <Grid container>
         <Grid item xs={2}>
-          <NavComponent menu={content} setSelectedStory={setSelectedStory}/>
+          <NavComponent menu={content} setSelectedStory={setSelectedStory} />
         </Grid>
-        <Grid item xs={4}>
-          <Stack direction='column' spacing={2} display='flex' alignItems='center'>
-          <Typography sx={{fontSize:20}}>
-              {selectedStory.title}
+        <Grid container item xs={10}>
+          <Stack>
+            <Typography sx={{ fontSize: 30 }}>
+              {'Здесь собраны авторские рассказы в честь Хеллоуина'}
             </Typography>
-          <Typography component='span' style={{whiteSpace: 'pre-line'}} >
-            {selectedStory.data}
-          </Typography>
-          </Stack>
-          
-        </Grid>
-        <Grid item xs={5} sx={{ml:2}}>
-          <Stack direction='column' spacing={2} display='flex' alignItems='center'>
-            <Typography sx={{fontSize:20}}>
-              {readMode ? 'Режим котят' : 'Режим маньяка'}
-            </Typography>
-            <Switch label="" onChange={handleChangeReadingMode}/>
-            <Stack direction="row" sx={{ p: 1, justifyContent:'center',flexWrap: 'wrap' }}>
-            {images.map((image, index) => 
-              <Box
-                key={index}
-                component="img"
-                sx={{
-                  cursor:'pointer',
-                  p: 1,
-                  maxHeight:200,
-                  // width: '100%',
-                  // maxHeight: { xs: 233, md: 167 },
-                  // maxWidth: { xs: 350, md: 250 },
-                }}
-                alt="image"
-                src={image.urls.regular}
-              />
-            )}
+            <Stack direction='row' spacing={2} sx={{ mr: 5, ml: 5 }}>
+              <Box display='flex' alignItems='center'>
+                <PetsIcon color={readMode ? 'action' : 'primary'} />
+                <Switch onChange={handleChangeReadingMode} />
+              </Box>
+              <Typography sx={{ fontSize: 20 }}>
+                {'Если вам страшно читать, можно включить котят'}
+              </Typography>
             </Stack>
+            <Typography sx={{ fontSize: 30 }}>
+              {selectedStory.title && `Title - ${selectedStory.title}`}
+            </Typography>
+            <Grid container>
+              <Grid item xs={!readMode ? 6 : 12}>
+                <Stack direction='column' sx={{maxHeight:'85vh', overflowY:'scroll'}} spacing={2} display='flex' alignItems='center'>
+                  <Typography component='span' style={{ whiteSpace: 'pre-line' }} >
+                    {selectedStory.data}
+                  </Typography>
+                </Stack>
+              </Grid>
+              <Grid item xs={5.5} sx={{ml:1}}>
+                <Fade>
+                  {!readMode && <iframe style={{ width: '100%', height: '85vh' }} src='https://www.pexels.com/search/kitten/' />}
+                </Fade>
+              </Grid>
+            </Grid>
           </Stack>
         </Grid>
       </Grid>

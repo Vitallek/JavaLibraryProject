@@ -2,6 +2,8 @@ package org.package1;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
 import com.mongodb.MongoException;
 import com.mongodb.client.*;
 import com.mongodb.client.model.Projections;
@@ -362,6 +364,27 @@ public class MongoDBDriver {
                         Updates.set(dataJson.getString("field"),dataJson.getInt("value"))
                 ));
             }
+            return new JSONObject().put("code", 200);
+        } catch (Exception e) {
+            System.out.println(e);
+            JSONObject dataJson = new JSONObject();
+            dataJson.put("desc",e.toString());
+            dataJson.put("code",500);
+            return dataJson;
+        }
+    }
+    public static JSONObject placeComment(MongoClient mongoClient, String bookkey, String data){
+        try {
+            JSONObject dataJson = new JSONObject(data);
+            MongoDatabase database = mongoClient.getDatabase(DB_NAME);
+            MongoCollection<Document> collection = database.getCollection(BOOKS);
+            System.out.println(bookkey);
+            System.out.println(data);
+            Document comment = new Document()
+                    .append("author", dataJson.getString("author"))
+                    .append("date",dataJson.getString("date"))
+                    .append("text",dataJson.getString("text"));
+            collection.updateOne(eq("key", bookkey), Updates.addToSet("comments", comment));
             return new JSONObject().put("code", 200);
         } catch (Exception e) {
             System.out.println(e);
