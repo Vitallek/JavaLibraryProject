@@ -42,7 +42,7 @@ const menu = [
   // }
 ]
 const Logout = () => {
-  Cookies.remove('credentials')
+  Cookies.remove('token')
   window.location.reload()
 }
 const CustomMenuItem = ({ item }) => {

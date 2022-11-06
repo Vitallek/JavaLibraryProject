@@ -56,18 +56,24 @@ public class Main {
             User user = gson.fromJson(req.body(), User.class);
             System.out.println("register from " + user.getEmail());
             JWTDriver.createToken(user);
-            return MongoDBDriver.register(mongoClient,user);
+            JSONObject response = MongoDBDriver.register(mongoClient,user);
+            res.status(response.getInt( "code"));
+            return response;
         });
         post("/login", (req, res) -> {
             User user = gson.fromJson(req.body(), User.class);
             System.out.println("login from " + user.getEmail());
-            return MongoDBDriver.login(mongoClient,user.getEmail(), user.getPassword());
+            JSONObject response = MongoDBDriver.login(mongoClient,user.getEmail(), user.getPassword());
+            res.status(response.getInt( "code"));
+            return response;
         });
         post("/cookie-login", (req, res) -> {
             String token = req.body();
             String payload = JWTDriver.decodeToken(token);
             User user = gson.fromJson(payload, User.class);
-            return MongoDBDriver.cookieLogin(mongoClient,user.getEmail(), user.getPassword());
+            JSONObject response = MongoDBDriver.cookieLogin(mongoClient,user.getEmail(), user.getPassword());
+            res.status(response.getInt( "code"));
+            return response;
         });
         get("/get-all/:collection/:take/:skip", (req, res) -> {
             System.out.println(req.params(":collection"));

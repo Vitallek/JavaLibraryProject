@@ -14,7 +14,7 @@ const App = () => {
       let cookies = JSON.parse(Cookies.get('token'))
       axios.post(`http://${process.env.REACT_APP_SERVER_ADDR}/cookie-login`, cookies).then(response => {
         console.log(response.data)
-        const responseJSON = response.data
+        const responseJSON = response.data.data
         setContextObject({
           auth: true, 
           role: responseJSON.role, 

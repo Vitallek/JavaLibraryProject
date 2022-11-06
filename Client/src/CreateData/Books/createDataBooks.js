@@ -133,7 +133,7 @@ const createDB = async () => {
 
   const contentColl = db.collection('content')
   contentColl.deleteMany()
-  await contentColl.insertMany(content)
+  await contentColl.insertOne(content)
 
   const authorsColl = db.collection('authors')
   authorsColl.deleteMany()

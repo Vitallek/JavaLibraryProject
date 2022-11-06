@@ -43,6 +43,13 @@ public class MongoDBDriver {
                 return dataJson;
             }
             try {
+                InsertOneResult result = collection.insertOne(new Document()
+                        .append("_id", new ObjectId())
+                        .append("email", user.getEmail())
+                        .append("name", user.getName())
+                        .append("password", user.getPassword())
+                        .append("token", user.getToken())
+                        .append("role", user.getRole()));
                 JSONObject dataJson = new JSONObject();
                 dataJson.put("token",user.getToken());
                 dataJson.put("code",200);
@@ -68,7 +75,8 @@ public class MongoDBDriver {
             Document doc = collection.find(eq("email", email)).first();
             if (doc != null) {
                 if(Objects.equals(doc.getString("password"), password)){
-                    JSONObject dataJson = new JSONObject(doc);
+                    JSONObject dataJson = new JSONObject();
+                    dataJson.put("data",doc);
                     dataJson.put("code",200);
                     return dataJson;
                 }
@@ -106,7 +114,8 @@ public class MongoDBDriver {
                 dataJson.put("code",401);
                 return dataJson;
             }
-            JSONObject dataJson = new JSONObject(doc);
+            JSONObject dataJson = new JSONObject();
+            dataJson.put("data",doc);
             dataJson.put("code",200);
             return dataJson;
         } catch (Exception e) {
