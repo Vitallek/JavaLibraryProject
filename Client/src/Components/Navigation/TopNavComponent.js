@@ -34,13 +34,12 @@ const menu = [
     to: '/about',
     items: []
   },
-
-  {
-    // icon: <HomeRoundedIcon />,
-    title: 'Collections',
-    to: '/collections',
-    items: []
-  }
+  // {
+  //   // icon: <HomeRoundedIcon />,
+  //   title: 'Collections',
+  //   to: '/collections',
+  //   items: []
+  // }
 ]
 const Logout = () => {
   Cookies.remove('credentials')
@@ -121,23 +120,15 @@ const TopNavComponent = ({ authorized, role }) => {
             </ListItemText>
           </MenuItem> : null
         }
-        <MenuItem onClick={() => { alert('todo') }}>
+        <MenuItem onClick={() => { 
+          handleCloseMenu(setAnchorEl)
+          navigate('/favorites')
+         }}>
           <ListItemIcon>
             <FavoriteRoundedIcon />
           </ListItemIcon>
           <ListItemText>
             Favourite
-          </ListItemText>
-        </MenuItem>
-        <MenuItem onClick={() => {
-          handleCloseMenu(setAnchorEl)
-          navigate('/orders')
-        }}>
-          <ListItemIcon>
-            <CollectionsBookmarkRoundedIcon />
-          </ListItemIcon>
-          <ListItemText>
-            My collections
           </ListItemText>
         </MenuItem>
         <MenuItem onClick={Logout}>

@@ -18,8 +18,9 @@ const App = () => {
         setContextObject({
           auth: true, 
           role: responseJSON.role, 
-          email:responseJSON.email, 
-          name:responseJSON.name,
+          email: responseJSON.email, 
+          name: responseJSON.name,
+          favorites: responseJSON.favorites
         })
         // if(responseJSON.msg.code === 200) setAuthorized(true)
       })

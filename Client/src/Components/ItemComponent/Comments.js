@@ -14,7 +14,7 @@ const  CommentsComponent = ({comments}) => {
       </Typography>
       {comments.map((comment, index) => {
         return (
-          <Paper key={index} style={{ padding: "40px 20px" }}>
+          <Paper key={index} style={{ padding: "40px 20px", maxWidth: '90%' }}>
             <Grid container wrap="nowrap" spacing={2}>
               <Grid item>
                 <Avatar alt="Remy Sharp" src='./profileMock.jpg' />

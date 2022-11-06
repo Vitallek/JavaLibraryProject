@@ -12,6 +12,7 @@ import TopNavComponent from "./Navigation/TopNavComponent";
 import SearchComponent from "./Search/SearchComponent";
 import BookComponent from "./ItemComponent/BookComponent";
 import EventsComponent from "./EventsComponent/EventsComponent";
+import FavoritesComponent from "./Favorites/FavoritesComponent";
 
 const CustomRoutes = ({ }) => {
   const props = useContext(UserInfoContext)
@@ -33,6 +34,7 @@ const CustomRoutes = ({ }) => {
           <Route path='/' element={<HomePage/>} />
           <Route path='/search' element={<SearchComponent />} />
           <Route path='/events' element={<EventsComponent />} />
+          <Route path='/favorites' element={<FavoritesComponent />} />
           <Route path='/book/:id' element={<BookComponent />} />
 
 

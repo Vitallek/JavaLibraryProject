@@ -15,6 +15,8 @@ let books = []
 let authors = []
 let subjects = []
 let events = []
+let content = {}
+content.currentEvent = 'Halloween'
 const randomIntFromInterval = (min, max) => { // min and max included 
   return Math.floor(Math.random() * (max - min + 1) + min)
 }
@@ -124,15 +126,14 @@ const createDB = async () => {
   await booksColl.createIndex({ subject: 1 })
   await booksColl.insertMany(books)
 
-  const collOfBooks = db.collection('bookcollections')
-  collOfBooks.deleteMany()
-  await collOfBooks.createIndex({ email: 1 })
-  await collOfBooks.createIndex({ name: 1 })
-
   const eventsColl = db.collection('events')
   await eventsColl.createIndex({ event: 1 })
   eventsColl.deleteMany()
   await eventsColl.insertMany(events)
+
+  const contentColl = db.collection('content')
+  contentColl.deleteMany()
+  await contentColl.insertMany(content)
 
   const authorsColl = db.collection('authors')
   authorsColl.deleteMany()

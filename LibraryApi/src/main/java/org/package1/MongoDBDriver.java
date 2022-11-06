@@ -83,15 +83,7 @@ public class MongoDBDriver {
                 dataJson.put("code",401);
                 return dataJson;
             }
-            JSONObject dataJson = new JSONObject();
-            JSONObject user = new JSONObject();
-            user.put("email",doc.getString("email"));
-            user.put("name",doc.getString("name"));
-            user.put("password",doc.getString("password"));
-            user.put("role",doc.getString("role"));
-            dataJson.put("data",user);
-            dataJson.put("code",200);
-            return dataJson;
+            return new JSONObject(doc);
         } catch (Exception e) {
             System.out.println(e);
             JSONObject dataJson = new JSONObject();
@@ -108,12 +100,7 @@ public class MongoDBDriver {
             Document doc = collection.find(eq("email", dataJSON.getString("email"))).first();
             if (doc != null) {
                 if(Objects.equals(doc.getString("password"), dataJSON.getString("password"))){
-                    JSONObject dataJson = new JSONObject();
-                    dataJson.put("desc","successful");
-                    dataJson.put("email",doc.getString("email"));
-                    dataJson.put("name",doc.getString("name"));
-                    dataJson.put("role",doc.getString("role"));
-                    return dataJson;
+                    return new JSONObject(doc);
                 }
                 JSONObject dataJson = new JSONObject();
                 dataJson.put("desc","password incorrect");
@@ -377,14 +364,54 @@ public class MongoDBDriver {
         try {
             JSONObject dataJson = new JSONObject(data);
             MongoDatabase database = mongoClient.getDatabase(DB_NAME);
-            MongoCollection<Document> collection = database.getCollection(BOOKS);
+            MongoCollection<Document> books = database.getCollection(BOOKS);
             System.out.println(bookkey);
             System.out.println(data);
             Document comment = new Document()
                     .append("author", dataJson.getString("author"))
                     .append("date",dataJson.getString("date"))
                     .append("text",dataJson.getString("text"));
-            collection.updateOne(eq("key", bookkey), Updates.addToSet("comments", comment));
+            books.updateOne(eq("key", bookkey), Updates.addToSet("comments", comment));
+            return new JSONObject().put("code", 200);
+        } catch (Exception e) {
+            System.out.println(e);
+            JSONObject dataJson = new JSONObject();
+            dataJson.put("desc",e.toString());
+            dataJson.put("code",500);
+            return dataJson;
+        }
+    }
+    public static JSONObject addToFavotite(MongoClient mongoClient,String data){
+        try {
+            JSONObject dataJson = new JSONObject(data);
+            MongoDatabase database = mongoClient.getDatabase(DB_NAME);
+            MongoCollection<Document> users = database.getCollection(USERS);
+            System.out.println(dataJson.getString("key"));
+            System.out.println(data);
+            Document favorite = new Document()
+                    .append("key", dataJson.getString("key"));
+            users.updateOne(eq("email", dataJson.getString("email")), Updates.addToSet("favorites", favorite));
+            return new JSONObject().put("code", 200);
+        } catch (Exception e) {
+            System.out.println(e);
+            JSONObject dataJson = new JSONObject();
+            dataJson.put("desc",e.toString());
+            dataJson.put("code",500);
+            return dataJson;
+        }
+    }
+    public static JSONObject removeFromFavorites(MongoClient mongoClient,  String data){
+        try {
+            JSONObject dataJson = new JSONObject(data);
+            MongoDatabase database = mongoClient.getDatabase(DB_NAME);
+            MongoCollection<Document> users = database.getCollection(USERS);
+            System.out.println(dataJson.getString("key"));
+            System.out.println(data);
+            Document favorite = new Document().append("key", dataJson.getString("key"));
+            users.updateOne(
+                    eq("email", dataJson.getString("email")),
+                    Updates.pull("favorites", favorite)
+            );
             return new JSONObject().put("code", 200);
         } catch (Exception e) {
             System.out.println(e);

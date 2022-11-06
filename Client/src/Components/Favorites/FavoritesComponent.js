@@ -23,7 +23,7 @@ const requestContent = async (setDisplayedContent, selectedField, take, skip) =>
     .catch(err => alert('can`t get data'))
 }
 
-const SearchComponent = () => {
+const FavoritesComponent = () => {
   const [searchKeys, setSearchKeys] = useState({})
   const [fields, setFields] = useState([])
   const [selectedField, setSelectedField] = useState('Books')
@@ -86,7 +86,7 @@ const SearchComponent = () => {
             <Typography
               fontSize={25}
             >
-              Search from
+              Search field
             </Typography>
             <Select
               sx={{ minWidth: "10vw" }}
@@ -168,4 +168,4 @@ const SearchComponent = () => {
   )
 }
 
-export default SearchComponent
+export default FavoritesComponent

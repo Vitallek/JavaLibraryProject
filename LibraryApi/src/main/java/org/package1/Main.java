@@ -148,6 +148,17 @@ public class Main {
             res.status(response.getInt("code"));
             return response;
         });
+        put("/add-to-favorite",(req,res) -> {
+            JSONObject response = MongoDBDriver.addToFavotite(mongoClient,req.body());
+            res.status(response.getInt("code"));
+            return response;
+        });
+        delete("/remove-from-favorite",(req,res) -> {
+            System.out.println(req.body());
+            JSONObject response = MongoDBDriver.removeFromFavorites(mongoClient,req.body());
+            res.status(response.getInt("code"));
+            return response;
+        });
         put("/update-book",(req,res) -> {
             JSONObject response = MongoDBDriver.updateBook(mongoClient,req.body());
             res.status(response.getInt("code"));

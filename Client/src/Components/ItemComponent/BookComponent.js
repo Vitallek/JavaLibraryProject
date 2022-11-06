@@ -1,17 +1,18 @@
-import { Card, CardContent, CardMedia, Grid, Button, MenuItem, Rating, Stack, TextField, Typography, Autocomplete, Pagination, Tooltip } from '@mui/material';
+import { Card, CardContent, CardMedia, Grid, Button, MenuItem, Rating, Stack, TextField, Typography, Autocomplete, Pagination, Tooltip, Link, Divider } from '@mui/material';
 import { Box } from '@mui/system';
 import Fade from 'react-reveal/Fade'
 import axios from 'axios';
-import { Button as PrimeButton } from 'primereact/button'
 import "primeflex/primeflex.css";
 import 'primeicons/primeicons.css';
 import "primereact/resources/primereact.css";
 import 'primereact/resources/themes/lara-light-indigo/theme.css';
 import { useContext, useEffect, useRef, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
+import { useParams } from 'react-router-dom';
 import CommentsComponent from './Comments';
 import { UserInfoContext } from '../../UserInfoContext';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import CollectionDialog from './CollectionDialog';
+import StarIcon from '@mui/icons-material/Star';
 
 const takeValues = [10, 20, 30, 50, 100]
 const BookComponent = () => {
@@ -19,6 +20,19 @@ const BookComponent = () => {
   const pageParams = useParams()
   const [book, setBook] = useState({})
   const commentRef = useRef(null)
+
+  const [isFavorite, setIsFavorite] = useState(false)
+
+  const [anchorEl, setAnchorEl] = useState(null)
+  const open = Boolean(anchorEl)
+  const [openAddItemDialog, setOpenAddItemDialog] = useState(false)
+  const handleOpenCollectionDialog = () => {
+    setOpenAddItemDialog(true)
+  };
+
+  const handleCloseCollectionDialog = () => {
+    setOpenAddItemDialog(false)
+  };
 
   const placeComment = (text) => {
     let updatedBook = structuredClone(book)
@@ -50,9 +64,40 @@ const BookComponent = () => {
     return () => mounted = false
   }, [pageParams])
 
+  useEffect(() => {
+    if(userInfoContext.favorites && userInfoContext.favorites.some(favorite => favorite.key === book.key)){
+      setIsFavorite(true)
+    } 
+  },[userInfoContext])
+
+  const handleSetFavorite = () => {
+    if(!userInfoContext.auth) {
+      return alert('Unauthorized action')
+    }
+    // if(!userInfoContext.favorites && !userInfoContext.favorites.some(favorite => favorite.key === book.key)){
+      
+    // } 
+    if(!isFavorite){
+      axios.put(`http://${process.env.REACT_APP_SERVER_ADDR}/add-to-favorite`, JSON.stringify({
+        email: userInfoContext.email,
+        key: book.key
+      }))
+      .then(response => console.log(response))
+      .catch(err => console.log(err))
+    } else {
+      axios.delete(`http://${process.env.REACT_APP_SERVER_ADDR}/remove-from-favorite`, {data:JSON.stringify({
+        email: userInfoContext.email,
+        key: book.key
+      })})
+      .then(response => console.log(response))
+      .catch(err => console.log(err))
+    }
+    setIsFavorite(prev => !prev)
+  }
+
   return (
     <Fade>
-      <Grid container sx={{ m: 10 }}>
+      <Grid container sx={{ p: 5 }}>
         <Grid item xs={3}>
           <Stack direction='column' spacing={2}>
             <Box
@@ -67,20 +112,51 @@ const BookComponent = () => {
               alt="book image"
               src={book.image}
             />
-            <Button>
-              To Favourite
-            </Button>
-            <Button>
-              To Collection
-            </Button>
+            <Box display='flex' justifyContent='center' alignItems='center'>
+              <FavoriteIcon color={!isFavorite ? 'action' : 'primary'} />
+              <Button color={!isFavorite ? 'inherit' : 'primary'} onClick={handleSetFavorite}>
+                To Favorite
+              </Button>
+            </Box>
+            {/* decide to delete */}
+            {/* <Box display='flex' justifyContent='center' alignItems='center'>
+              <StarIcon color={!inCollection ? 'action' : 'primary'} />
+              <Button color={!inCollection ? 'inherit' : 'primary'} onClick={handleOpenCollectionDialog}>
+                To Collection
+              </Button>
+              <CollectionDialog  
+                open={openAddItemDialog}
+                onClose={handleCloseCollectionDialog}
+                collections={userInfoContext.collections}
+              />
+            </Box> */}
+            {book.links && book.links.length > 0 &&
+              <>
+              <Typography
+                fontSize={20}
+              >
+                Links
+              </Typography>
+              <Divider/>
+                {book.links.map((link, index) => <Link key={index} sx={{mt:5, cursor:'pointer'}} underline='none' target='_blank' href={link.url}>{link.title}</Link>)}
+              </>
+            }
           </Stack>
         </Grid>
-        <Grid item xs={9}>
-          <Stack direction='column' spacing={2} sx={{ml:2}}>
+        <Grid item xs={8}>
+          <Stack direction='column' spacing={2} sx={{ml:2, maxWidth: '90%'}}>
             <Typography
               fontSize={30}
             >
               {book.title}
+            </Typography>
+            
+            <Divider/>
+
+            <Typography
+              fontSize={20}
+            >
+              {`Genre: ${book.subject}`}
             </Typography>
 
             <Stack direction='row' spacing={2}>
@@ -98,15 +174,20 @@ const BookComponent = () => {
                 <Rating name="read-only" value={Math.floor(book.rate)} readOnly />
               </Typography>
             </Stack>
+            
+            {book.descriptoin && 
+            <>
+              <Typography
+                fontSize={30}
+              >
+                {'Description'}
+              </Typography>
+              <Typography component='span' style={{ whiteSpace: 'pre-line'}} >
+                {book.description}
+              </Typography>
+            </>}
 
-            <Typography
-              fontSize={30}
-            >
-              {'Description'}
-            </Typography>
-            <Typography component='span' style={{ whiteSpace: 'pre-line' }} >
-              {book.description}
-            </Typography>
+            <Divider/>
 
             {book.comments && book.comments.length > 0 
             ? 
@@ -136,6 +217,7 @@ const BookComponent = () => {
             :
             <Typography
               fontSize={20}
+              color="gray"
             >
               {'Authorize to write comments'}
             </Typography>

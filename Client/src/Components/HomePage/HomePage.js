@@ -2,13 +2,14 @@ import { Card, CardContent, CardMedia, Grid, Link, MenuItem, Rating, Stack, Text
 import { Box } from '@mui/system';
 import Fade from 'react-reveal/Fade'
 import axios from 'axios';
-import {Button as PrimeButton} from 'primereact/button'
+import { Button as PrimeButton } from 'primereact/button'
 import "primeflex/primeflex.css";
 import 'primeicons/primeicons.css';
 import "primereact/resources/primereact.css";
 import 'primereact/resources/themes/lara-light-indigo/theme.css';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AuthorItemCard, BookItemCard, SubjectItemCard } from '../ItemCardComponent';
 
 const HomePage = () => {
   const [content, setContent] = useState([])
@@ -33,7 +34,7 @@ const HomePage = () => {
     <Grid container item xs={12} display='flex' direction='column'>
       <Fade>
         <Typography
-          sx={{ m: 3,display: 'flex', justifyContent: 'center' }}
+          sx={{ m: 3, display: 'flex', justifyContent: 'center' }}
           fontSize={50}
         >
           A-Library
@@ -65,7 +66,7 @@ const HomePage = () => {
                 <strong>A-Library </strong>
                 provides free, high-quality educational resources for anyone, anywhere.
               </div>
-              <Link sx={{mt:5, cursor:'pointer'}} underline='none'>Learn more</Link>
+              <Link sx={{ mt: 5, cursor: 'pointer' }} underline='none' href='/about'>Learn more</Link>
             </Stack>
 
           </Typography>
@@ -73,7 +74,7 @@ const HomePage = () => {
       </Fade>
       <Fade>
         <Typography
-          sx={{ m: 3, ml:7, mb:1, display: 'flex', justifyContent: 'flex-start' }}
+          sx={{ m: 3, ml: 7, mb: 1, display: 'flex', justifyContent: 'flex-start' }}
           fontSize={30}
           fontWeight={600}
           color='gray'
@@ -81,44 +82,14 @@ const HomePage = () => {
           Top books
         </Typography>
         <Stack direction='row' display='flex' justifyContent='center' alignItems='center' spacing={2} sx={{ p: 5, pt: 1 }}>
-          {content.books?.sort((el1,el2) => el2.rate - el1.rate).slice(0,5).map((book,index) => 
-            <Card 
-            key={index} 
-            sx={{ 
-              minWidth: 200, 
-              minHeight: 400,
-              display: 'flex', 
-              flexDirection:'column', 
-              justifyContent: 'space-between', 
-              m: 2 
-              }}
-            >
-              <CardMedia
-                component="img"
-                height={200}
-                image={book.image}
-                alt="green iguana"
-              />
-              <CardContent>
-                <div>
-                <strong>{book.title}</strong>{` - `}<br/>
-                <span>{book.author_name}</span>
-
-                </div>
-              </CardContent>
-              <CardContent>
-                <Typography display='flex' alignItems='center'>
-                <Typography component="legend">{parseFloat(book.rate).toFixed(1)}</Typography>
-                  <Rating name="read-only" value={book.rate} readOnly />
-                </Typography>
-              </CardContent>
-            </Card>
-            )}
+          {content.books?.sort((el1, el2) => el2.rate - el1.rate).slice(0, 5).map((book, index) =>
+            <BookItemCard key={index} book={book} bookIndex={index}/>
+          )}
         </Stack>
       </Fade>
       <Fade>
         <Typography
-          sx={{ m: 3, ml:7, mb:1, display: 'flex', justifyContent: 'flex-start' }}
+          sx={{ m: 3, ml: 7, mb: 1, display: 'flex', justifyContent: 'flex-start' }}
           fontSize={30}
           fontWeight={600}
           color='gray'
@@ -126,40 +97,14 @@ const HomePage = () => {
           Top authors
         </Typography>
         <Stack direction='row' display='flex' justifyContent='center' alignItems='center' spacing={2} sx={{ p: 5, pt: 1 }}>
-          {content.authors?.sort((el1,el2) => el2.rate - el1.rate).slice(0,5).map((author,index) => 
-            <Card 
-            key={index} 
-            sx={{ 
-              minWidth: 200, 
-              display: 'flex', 
-              flexDirection:'column', 
-              justifyContent: 'space-between', 
-              minHeight: '350px', 
-              m: 2 
-              }}
-            >
-              <CardMedia
-                component="img"
-                height={200}
-                image={author.image}
-                alt="green iguana"
-              />
-              <CardContent>
-                <strong>{author.author_name}</strong>
-              </CardContent>
-              <CardContent>
-                <Typography display='flex' alignItems='center'>
-                <Typography component="legend">{parseFloat(author.rate).toFixed(1)}</Typography>
-                  <Rating name="read-only" value={author.rate} readOnly />
-                </Typography>
-              </CardContent>
-            </Card>
-            )}
+          {content.authors?.sort((el1, el2) => el2.rate - el1.rate).slice(0, 5).map((author, index) =>
+            <AuthorItemCard key={index} author={author} authorIndex={index}/>
+          )}
         </Stack>
       </Fade>
       <Fade>
         <Typography
-          sx={{ m: 3, ml:7, mb:1, display: 'flex', justifyContent: 'flex-start' }}
+          sx={{ m: 3, ml: 7, mb: 1, display: 'flex', justifyContent: 'flex-start' }}
           fontSize={30}
           fontWeight={600}
           color='gray'
@@ -167,40 +112,14 @@ const HomePage = () => {
           Top genres
         </Typography>
         <Stack direction='row' display='flex' justifyContent='center' alignItems='center' spacing={2} sx={{ p: 5, pt: 1 }}>
-          {content.subjects?.sort((el1,el2) => el2.rate - el1.rate).slice(0,5).map((subject,index) => 
-            <Card 
-            key={index} 
-            sx={{ 
-              minWidth: 200, 
-              display: 'flex', 
-              flexDirection:'column', 
-              justifyContent: 'space-between', 
-              minHeight: '350px', 
-              m: 2 
-              }}
-            >
-              <CardMedia
-                component="img"
-                height={200}
-                image={subject.image}
-                alt="green iguana"
-              />
-              <CardContent>
-                <strong>{subject.subject}</strong>
-              </CardContent>
-              <CardContent>
-                <Typography display='flex' alignItems='center'>
-                <Typography component="legend">{parseFloat(subject.rate).toFixed(1)}</Typography>
-                  <Rating name="read-only" value={subject.rate} readOnly />
-                </Typography>
-              </CardContent>
-            </Card>
-            )}
+          {content.subjects?.sort((el1, el2) => el2.rate - el1.rate).slice(0, 5).map((subject, index) =>
+            <SubjectItemCard key={index} subject={subject} subjectIndex={index}/>
+          )}
         </Stack>
       </Fade>
       <Fade>
-        <Box display='flex' justifyContent='center' sx={{mb:10}}>
-          <PrimeButton variant='contained'>
+        <Box display='flex' justifyContent='center' sx={{ mb: 10 }}>
+          <PrimeButton variant='contained' onClick={() => navigate('/search')}>
             Explore more
           </PrimeButton>
         </Box>
