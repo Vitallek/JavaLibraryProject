@@ -1,6 +1,7 @@
 package org.package1;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.reflect.TypeToken;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
@@ -14,6 +15,7 @@ import com.mongodb.lang.Nullable;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
+import org.eclipse.jetty.util.ajax.JSON;
 import org.json.JSONObject;
 import org.package1.utility.User;
 
@@ -205,6 +207,29 @@ public class MongoDBDriver {
             return dataJson;
         }
     }
+    public static JSONObject getFavorites(MongoClient mongoClient, String email){
+        try {
+            MongoDatabase database = mongoClient.getDatabase(DB_NAME);
+            MongoCollection<Document> users = database.getCollection(USERS);
+            MongoCollection<Document> booksColl = database.getCollection(BOOKS);
+            Document user = users.find(eq("email", email)).first();
+            JSONObject userJSON = new JSONObject(user);
+            ArrayList<Document> books = new ArrayList<>();
+            userJSON.getJSONArray("favorites").forEach(favorite -> {
+                books.add(booksColl.find(eq("key",favorite)).first());
+            });
+            JSONObject dataJson = new JSONObject();
+            dataJson.put("data", books);
+            dataJson.put("code", 200);
+            return dataJson;
+        } catch (Exception e) {
+            System.out.println(e);
+            JSONObject dataJson = new JSONObject();
+            dataJson.put("desc",e.toString());
+            dataJson.put("code",500);
+            return dataJson;
+        }
+    }
     public static JSONObject getSearchKeys(MongoClient mongoClient){
         try {
             MongoDatabase database = mongoClient.getDatabase(DB_NAME);
@@ -300,26 +325,6 @@ public class MongoDBDriver {
             return dataJson;
         }
     }
-
-    //@TODO доделать структуру коллекции
-    public static JSONObject deleteSelectedFromBookCollections(MongoClient mongoClient, String selected){
-        try {
-            MongoDatabase database = mongoClient.getDatabase(DB_NAME);
-            MongoCollection<Document> collection = database.getCollection(BOOKCOLLS);
-            ArrayList<Document> selectedDocs =  gson.fromJson(selected, new TypeToken<List<Document>>() {}.getType());
-            selectedDocs.forEach(doc -> {
-                Bson query = eq("_id", doc.get("_id"));
-                collection.deleteOne(query);
-            });
-            return new JSONObject().put("code", 200);
-        } catch (Exception e) {
-            System.out.println(e);
-            JSONObject dataJson = new JSONObject();
-            dataJson.put("desc",e.toString());
-            dataJson.put("code",500);
-            return dataJson;
-        }
-    }
     public static JSONObject insert(MongoClient mongoClient, String coll, String data){
         try {
             MongoDatabase database = mongoClient.getDatabase(DB_NAME);
@@ -388,9 +393,10 @@ public class MongoDBDriver {
             MongoCollection<Document> users = database.getCollection(USERS);
             System.out.println(dataJson.getString("key"));
             System.out.println(data);
-            Document favorite = new Document()
-                    .append("key", dataJson.getString("key"));
-            users.updateOne(eq("email", dataJson.getString("email")), Updates.addToSet("favorites", favorite));
+            users.updateOne(
+                    eq("email", dataJson.getString("email")),
+                    Updates.addToSet("favorites", dataJson.getString("key"))
+            );
             return new JSONObject().put("code", 200);
         } catch (Exception e) {
             System.out.println(e);
@@ -407,10 +413,9 @@ public class MongoDBDriver {
             MongoCollection<Document> users = database.getCollection(USERS);
             System.out.println(dataJson.getString("key"));
             System.out.println(data);
-            Document favorite = new Document().append("key", dataJson.getString("key"));
             users.updateOne(
                     eq("email", dataJson.getString("email")),
-                    Updates.pull("favorites", favorite)
+                    Updates.pull("favorites", dataJson.getString("key"))
             );
             return new JSONObject().put("code", 200);
         } catch (Exception e) {
@@ -449,55 +454,6 @@ public class MongoDBDriver {
                     Updates.set(dataJson.getString("field"),dataJson.getString("value"))
             ));
             return new JSONObject().put("code", 200);
-        } catch (Exception e) {
-            System.out.println(e);
-            JSONObject dataJson = new JSONObject();
-            dataJson.put("desc",e.toString());
-            dataJson.put("code",500);
-            return dataJson;
-        }
-    }
-    //@TODO доделать структуру коллекции
-    public static JSONObject updateBookColl(MongoClient mongoClient, String data){
-        try {
-            JSONObject dataJson = new JSONObject(data);
-            MongoDatabase database = mongoClient.getDatabase(DB_NAME);
-            MongoCollection<Document> collection = database.getCollection(BOOKCOLLS);
-            if(dataJson.get("value") instanceof String){
-                System.out.println(collection.updateOne(
-                        eq("_id", dataJson.getString("_id")),
-                        Updates.set(dataJson.getString("field"),dataJson.getString("value"))
-                ));
-            }
-            if(dataJson.get("value") instanceof Integer){
-                System.out.println(collection.updateOne(
-                        eq("key", dataJson.getString("key")),
-                        Updates.set(dataJson.getString("field"),dataJson.getInt("value"))
-                ));
-            }
-            return new JSONObject().put("code", 200);
-        } catch (Exception e) {
-            System.out.println(e);
-            JSONObject dataJson = new JSONObject();
-            dataJson.put("desc",e.toString());
-            dataJson.put("code",500);
-            return dataJson;
-        }
-    }
-    public static JSONObject getUserBookColls(MongoClient mongoClient, String email){
-        try {
-            MongoDatabase database = mongoClient.getDatabase(DB_NAME);
-            MongoCollection<Document> collection = database.getCollection(BOOKCOLLS);
-            FindIterable<Document> findIterable = collection.find(eq("user_email", email));
-            Iterator<Document> iterator = findIterable.iterator();
-            ArrayList<Document> orders = new ArrayList<>();
-            while (iterator.hasNext()) {
-                orders.add(iterator.next());
-            }
-            JSONObject dataJson = new JSONObject();
-            dataJson.put("data", orders);
-            dataJson.put("code", 200);
-            return dataJson;
         } catch (Exception e) {
             System.out.println(e);
             JSONObject dataJson = new JSONObject();

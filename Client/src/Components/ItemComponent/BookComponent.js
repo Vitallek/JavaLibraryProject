@@ -65,7 +65,7 @@ const BookComponent = () => {
   }, [pageParams])
 
   useEffect(() => {
-    if(userInfoContext.favorites && userInfoContext.favorites.some(favorite => favorite.key === book.key)){
+    if(userInfoContext.favorites && userInfoContext.favorites.some(favorite => favorite === book.key)){
       setIsFavorite(true)
     } 
   },[userInfoContext])
@@ -82,17 +82,16 @@ const BookComponent = () => {
         email: userInfoContext.email,
         key: book.key
       }))
-      .then(response => console.log(response))
+      .then(response => setIsFavorite(prev => !prev))
       .catch(err => console.log(err))
     } else {
       axios.delete(`http://${process.env.REACT_APP_SERVER_ADDR}/remove-from-favorite`, {data:JSON.stringify({
         email: userInfoContext.email,
         key: book.key
       })})
-      .then(response => console.log(response))
+      .then(response => setIsFavorite(prev => !prev))
       .catch(err => console.log(err))
     }
-    setIsFavorite(prev => !prev)
   }
 
   return (

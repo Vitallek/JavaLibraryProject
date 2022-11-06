@@ -97,6 +97,30 @@ public class Main {
             res.status(response.getInt( "code"));
             return response;
         });
+        get("/get-favorites/:user", (req, res) -> {
+            JSONObject response = MongoDBDriver.getFavorites(mongoClient, req.params(":user"));
+            res.status(response.getInt( "code"));
+            return response;
+        });
+        put("/place-comment/:bookkey",(req,res) -> {
+            JSONObject response = MongoDBDriver.placeComment(mongoClient,req.params(":bookkey"), req.body());
+            res.status(response.getInt("code"));
+            return response;
+        });
+        put("/add-to-favorite",(req,res) -> {
+            JSONObject response = MongoDBDriver.addToFavotite(mongoClient,req.body());
+            res.status(response.getInt("code"));
+            return response;
+        });
+        delete("/remove-from-favorite",(req,res) -> {
+            System.out.println(req.body());
+            JSONObject response = MongoDBDriver.removeFromFavorites(mongoClient,req.body());
+            res.status(response.getInt("code"));
+            return response;
+        });
+
+
+
         get("get-images/:query", (req, res) -> {
             System.out.println(req.params(":query"));
 
@@ -118,8 +142,14 @@ public class Main {
                 return new JSONObject().put("error", e.toString());
             }
         });
-        delete("delete-selected-subjects", (req, res) -> {
-            JSONObject response = MongoDBDriver.deleteSelectedFromSubjects(mongoClient,req.body());
+        post("insert-to-coll/:brand",(req,res) -> {
+            JSONObject response = MongoDBDriver.insert(mongoClient,req.params(":brand").toLowerCase(), req.body());
+            res.status(response.getInt("code"));
+            return response;
+        });
+
+        delete("delete-selected-books", (req, res) -> {
+            JSONObject response = MongoDBDriver.deleteSelectedFromBooks(mongoClient,req.body());
             res.status(response.getInt("code"));
             return response;
         });
@@ -128,37 +158,12 @@ public class Main {
             res.status(response.getInt("code"));
             return response;
         });
-        delete("delete-selected-books", (req, res) -> {
-            JSONObject response = MongoDBDriver.deleteSelectedFromBooks(mongoClient,req.body());
+        delete("delete-selected-subjects", (req, res) -> {
+            JSONObject response = MongoDBDriver.deleteSelectedFromSubjects(mongoClient,req.body());
             res.status(response.getInt("code"));
             return response;
         });
-        delete("delete-selected-bookscoll", (req, res) -> {
-            JSONObject response = MongoDBDriver.deleteSelectedFromBookCollections(mongoClient,req.body());
-            res.status(response.getInt("code"));
-            return response;
-        });
-        post("insert-to-coll/:brand",(req,res) -> {
-            JSONObject response = MongoDBDriver.insert(mongoClient,req.params(":brand").toLowerCase(), req.body());
-            res.status(response.getInt("code"));
-            return response;
-        });
-        put("/place-comment/:bookkey",(req,res) -> {
-            JSONObject response = MongoDBDriver.placeComment(mongoClient,req.params(":bookkey"), req.body());
-            res.status(response.getInt("code"));
-            return response;
-        });
-        put("/add-to-favorite",(req,res) -> {
-            JSONObject response = MongoDBDriver.addToFavotite(mongoClient,req.body());
-            res.status(response.getInt("code"));
-            return response;
-        });
-        delete("/remove-from-favorite",(req,res) -> {
-            System.out.println(req.body());
-            JSONObject response = MongoDBDriver.removeFromFavorites(mongoClient,req.body());
-            res.status(response.getInt("code"));
-            return response;
-        });
+
         put("/update-book",(req,res) -> {
             JSONObject response = MongoDBDriver.updateBook(mongoClient,req.body());
             res.status(response.getInt("code"));
@@ -169,20 +174,9 @@ public class Main {
             res.status(response.getInt("code"));
             return response;
         });
-        put("/update-bookcoll",(req,res) -> {
-            JSONObject response = MongoDBDriver.updateBookColl(mongoClient,req.body());
-            res.status(response.getInt("code"));
-            return response;
-        });
         put("/update-subject",(req,res) -> {
             JSONObject response = MongoDBDriver.updateSubject(mongoClient,req.body());
             res.status(response.getInt("code"));
-            return response;
-        });
-        get("/get-coll/:email", (req, res) -> {
-            System.out.println("get orders from " + req.params(":email"));
-            JSONObject response = MongoDBDriver.getUserBookColls(mongoClient,req.params(":email").toLowerCase());
-            res.status(response.getInt( "code"));
             return response;
         });
     }
