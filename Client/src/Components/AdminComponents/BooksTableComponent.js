@@ -10,7 +10,7 @@ import { Toast } from 'primereact/toast';
 import { Button, Stack, TextField, Box, List } from '@mui/material';
 import {Button as PrimeButton} from 'primereact/button'
 import { InputText } from 'primereact/inputtext';
-import AddCarDialog from '../Admin/AddCarDialog';
+import AddBookDialog from './AddBookDialog';
 
 const ITEM_HEIGHT = 48
 const isPositiveInteger = (val) => {
@@ -168,13 +168,11 @@ const BooksTableComponent = () => {
         <Column field="title" header="Title" filter />
       </DataTable>
 
-      {/* <AddCarDialog 
+      <AddBookDialog 
         open={openAddItemDialog}
         onClose={handleCloseAddItemDialog}
-        selectedBrand={''}
-        brands={[]}
         refresh={refreshFromDialog}
-      /> */}
+      />
     </>
   )
 }

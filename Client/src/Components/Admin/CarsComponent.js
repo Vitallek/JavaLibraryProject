@@ -11,7 +11,7 @@ import { Button, Stack, TextField, Box, List } from '@mui/material';
 import { MenuItem, Menu } from '@mui/material'
 import { InputText } from 'primereact/inputtext';
 import DeleteIcon from '@mui/icons-material/Delete';
-import AddCarDialog from './AddCarDialog';
+import AddBookDialog from '../AdminComponents/AddBookDialog';
 import AddBrandDialog from './AddBrandDialog';
 
 const ITEM_HEIGHT = 48
@@ -314,7 +314,7 @@ const CarsComponent = ({ brands }) => {
         <Column field="VIN" header="VIN" filter />
       </DataTable>
 
-      <AddCarDialog 
+      <AddBookDialog 
         open={openAddItemDialog}
         onClose={handleCloseAddItemDialog}
         selectedBrand={selectedBrand}
