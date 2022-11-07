@@ -24,11 +24,12 @@ const  CommentsComponent = ({comments,bookKey}) => {
   const onCommentEditComplete = (e, comment) => {
     if(e.keyCode === enterKey){
       const newComments = [...commentsState]
-      newComments[newComments.findIndex(el => el.id === comment.id)].text = e.target.value
-      setComments(newComments)
+      let editedCommentIndex = newComments.findIndex(el => el.id === comment.id)
+      newComments[editedCommentIndex].text = e.target.value
+      newComments[editedCommentIndex].edited = `${new Date().getTime()}`
       setIsEditComment({id: comment.id, state: !isEditComment.state})
-
-      updateComment({...comment, text: e.target.value})
+      updateComment({...comment, text: e.target.value, edited: `${new Date().getTime()}`})
+      setComments(newComments)
     }
     if(e.keyCode === escapeKey) setIsEditComment(prev => ({...prev,state: !isEditComment.state}))
   }
@@ -39,7 +40,8 @@ const  CommentsComponent = ({comments,bookKey}) => {
   }
   const handleDeleteComment = (comment) => {
     const newComments = [...commentsState]
-    newComments.splice(newComments.findIndex(el => el.id === comment.id),1)
+    let deleteCommentIndex = newComments.findIndex(el => el.id === comment.id)
+    newComments.splice(deleteCommentIndex,1)
     setComments(newComments)
     axios.delete(`http://${process.env.REACT_APP_SERVER_ADDR}/delete-comment/${bookKey}/${comment.id}`)
       .then(response => console.log(response))
@@ -76,7 +78,11 @@ const  CommentsComponent = ({comments,bookKey}) => {
                   }
                 </Box>
                 <p style={{ textAlign: "left", color: "gray" }}>
-                  {`posted ${new Date(parseInt(comment.date)).toLocaleString()}`}
+                  {comment.edited ? 
+                  `edited ${new Date(parseInt(comment.edited)).toLocaleString()}`
+                  :
+                  `posted ${new Date(parseInt(comment.date)).toLocaleString()}`
+                }
                 </p>
               </Grid>
               {userInfoContext.auth && userInfoContext.email === comment.email && 

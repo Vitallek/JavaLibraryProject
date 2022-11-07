@@ -11,8 +11,6 @@ import { useParams } from 'react-router-dom';
 import CommentsComponent from './Comments';
 import { UserInfoContext } from '../../UserInfoContext';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import CollectionDialog from './CollectionDialog';
-import StarIcon from '@mui/icons-material/Star';
 
 const takeValues = [10, 20, 30, 50, 100]
 const BookComponent = () => {
@@ -20,21 +18,16 @@ const BookComponent = () => {
   const pageParams = useParams()
   const [book, setBook] = useState({})
   const commentRef = useRef(null)
-
+  const [placeCommentAvailable, setPlaceCommentAvailable] = useState(true)
   const [isFavorite, setIsFavorite] = useState(false)
 
-  const [anchorEl, setAnchorEl] = useState(null)
-  const open = Boolean(anchorEl)
-  const [openAddItemDialog, setOpenAddItemDialog] = useState(false)
-  const handleOpenCollectionDialog = () => {
-    setOpenAddItemDialog(true)
-  };
-
-  const handleCloseCollectionDialog = () => {
-    setOpenAddItemDialog(false)
-  };
-
   const placeComment = (text) => {
+    if(!text) return
+    setPlaceCommentAvailable(false)
+    setTimeout(() => {
+      setPlaceCommentAvailable(true)
+    }, 3000);
+
     let updatedBook = structuredClone(book)
     if (updatedBook.comments === undefined) updatedBook.comments = []
     const comment = {
@@ -214,11 +207,11 @@ const BookComponent = () => {
                 label="Maximum length: 1000"
                 multiline
                 rows={5}
+                defaultValue='Awesome book!'
                 inputProps={{ maxLength: 1000 }}
-                defaultValue="Amazing book!"
                 variant="filled"
               />
-              <Button variant="contained" onClick={() => placeComment(commentRef.current.value)}>
+              <Button disabled={!placeCommentAvailable} variant="contained" onClick={_ => placeComment(commentRef.current.value)}>
                 Comment
               </Button>
             </Stack>

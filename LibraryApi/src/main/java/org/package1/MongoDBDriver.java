@@ -400,13 +400,14 @@ public class MongoDBDriver {
             MongoCollection<Document> books = database.getCollection(BOOKS);
             books.updateOne(
                     eq("key", bookkey),
-                    Updates.pull("comments", null)
+                    Updates.pull("comments", eq("id", id))
             );
             Document comment = new Document()
                     .append("author", dataJson.getString("author"))
                     .append("date",dataJson.getString("date"))
                     .append("text",dataJson.getString("text"))
                     .append("id",dataJson.getString("id"))
+                    .append("edited",dataJson.getString("edited"))
                     .append("email",dataJson.getString("email"));
             books.updateOne(eq("key", bookkey), Updates.addToSet("comments", comment));
             return new JSONObject().put("code", 200);
