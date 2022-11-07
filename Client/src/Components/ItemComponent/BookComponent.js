@@ -39,8 +39,10 @@ const BookComponent = () => {
     if (updatedBook.comments === undefined) updatedBook.comments = []
     const comment = {
       author: userInfoContext.name,
+      email: userInfoContext.email,
       date: `${new Date().getTime()}`,
       text: text,
+      id: `${userInfoContext.email+updatedBook.comments.length}`
     }
     updatedBook.comments.push(comment)
     axios.put(`http://${process.env.REACT_APP_SERVER_ADDR}/place-comment/${book.key}`, JSON.stringify(comment))
@@ -174,15 +176,21 @@ const BookComponent = () => {
               </Typography>
             </Stack>
             
-            {book.descriptoin && 
+            {book.description && 
             <>
               <Typography
                 fontSize={30}
               >
                 {'Description'}
               </Typography>
-              <Typography component='span' style={{ whiteSpace: 'pre-line'}} >
-                {book.description}
+              <Typography component='span' style={{ whiteSpace: 'pre-line'}}>
+                {book.description.value === undefined 
+                ?
+                `${book.description}`
+                :
+                `${book.description.value}`
+                }
+                
               </Typography>
             </>}
 
@@ -190,7 +198,8 @@ const BookComponent = () => {
 
             {book.comments && book.comments.length > 0 
             ? 
-            <CommentsComponent comments={book.comments}/>
+            // <CommentsComponent comments={[...book.comments].sort((el1,el2) => el1.date - el2.date)} bookKey={book.key}/>
+            <CommentsComponent comments={book.comments} bookKey={book.key}/>
             :
             <Typography
               fontSize={20}

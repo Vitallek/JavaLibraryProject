@@ -117,6 +117,16 @@ public class Main {
             res.status(response.getInt("code"));
             return response;
         });
+        put("/update-comment/:bookkey/:id",(req,res) -> {
+            JSONObject response = MongoDBDriver.updateComment(mongoClient,req.params(":bookkey"), req.params(":id"),req.body());
+            res.status(response.getInt("code"));
+            return response;
+        });
+        delete("/delete-comment/:bookkey/:id",(req,res) -> {
+            JSONObject response = MongoDBDriver.deleteComment(mongoClient,req.params(":bookkey"), req.params(":id"));
+            res.status(response.getInt("code"));
+            return response;
+        });
         put("/add-to-favorite",(req,res) -> {
             JSONObject response = MongoDBDriver.addToFavotite(mongoClient,req.body());
             res.status(response.getInt("code"));

@@ -380,8 +380,52 @@ public class MongoDBDriver {
             Document comment = new Document()
                     .append("author", dataJson.getString("author"))
                     .append("date",dataJson.getString("date"))
-                    .append("text",dataJson.getString("text"));
+                    .append("text",dataJson.getString("text"))
+                    .append("id",dataJson.getString("id"))
+                    .append("email",dataJson.getString("email"));
             books.updateOne(eq("key", bookkey), Updates.addToSet("comments", comment));
+            return new JSONObject().put("code", 200);
+        } catch (Exception e) {
+            System.out.println(e);
+            JSONObject dataJson = new JSONObject();
+            dataJson.put("desc",e.toString());
+            dataJson.put("code",500);
+            return dataJson;
+        }
+    }
+    public static JSONObject updateComment(MongoClient mongoClient,String bookkey, String id, String data){
+        try {
+            JSONObject dataJson = new JSONObject(data);
+            MongoDatabase database = mongoClient.getDatabase(DB_NAME);
+            MongoCollection<Document> books = database.getCollection(BOOKS);
+            books.updateOne(
+                    eq("key", bookkey),
+                    Updates.pull("comments", null)
+            );
+            Document comment = new Document()
+                    .append("author", dataJson.getString("author"))
+                    .append("date",dataJson.getString("date"))
+                    .append("text",dataJson.getString("text"))
+                    .append("id",dataJson.getString("id"))
+                    .append("email",dataJson.getString("email"));
+            books.updateOne(eq("key", bookkey), Updates.addToSet("comments", comment));
+            return new JSONObject().put("code", 200);
+        } catch (Exception e) {
+            System.out.println(e);
+            JSONObject dataJson = new JSONObject();
+            dataJson.put("desc",e.toString());
+            dataJson.put("code",500);
+            return dataJson;
+        }
+    }
+    public static JSONObject deleteComment(MongoClient mongoClient,String bookkey, String id){
+        try {
+            MongoDatabase database = mongoClient.getDatabase(DB_NAME);
+            MongoCollection<Document> books = database.getCollection(BOOKS);
+            books.updateOne(
+                    eq("key", bookkey),
+                    Updates.pull("comments", eq("id", id))
+            );
             return new JSONObject().put("code", 200);
         } catch (Exception e) {
             System.out.println(e);
