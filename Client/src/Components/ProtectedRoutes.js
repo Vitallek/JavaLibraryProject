@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Routes, Route } from "react-router-dom";
 //routes
-import AdminMainComponent from "./Admin/AdminMainComponent";
+import AdminMainComponent from "./AdminComponents/AdminMainComponent";
 
 const ProtectedRoutes = () => (
   <Routes>
-    <Route path="/moderation" element={<AdminMainComponent />} />
+    <Route path="/" element={<AdminMainComponent />} />
   </Routes>
 )
 

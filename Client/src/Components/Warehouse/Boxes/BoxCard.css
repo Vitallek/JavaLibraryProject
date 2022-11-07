@@ -1,9 +1,0 @@
-.article-wrapper-default{
-    border-radius: 0px 0px 5px 5px;
-    box-shadow: 0px 0px 1px 1px rgba(0, 0, 0, 0.28);
-}
-.article-wrapper-selected{
-    border-radius: 0px 0px 5px 5px;
-    box-shadow: 0px 0px 1px 1px rgba(180, 21, 172, 0.28);
-    background-color: rgba(180, 21, 172, 0.28);
-}

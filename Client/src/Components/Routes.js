@@ -7,7 +7,6 @@ import HomePage from "./HomePage/HomePage";
 import AllFromBrandComponent from "./ItemComponent/BookComponent";
 import UnderConstructionTemplate from "./UnderConstructionTemplate/UnderConstructionTemplate";
 import AboutCompany from "./Content/AboutCompany";
-import OrdersComponent from "./Orders/OrdersComponent";
 import TopNavComponent from "./Navigation/TopNavComponent";
 import SearchComponent from "./Search/SearchComponent";
 import BookComponent from "./ItemComponent/BookComponent";
@@ -36,46 +35,11 @@ const CustomRoutes = ({ }) => {
           <Route path='/events' element={<EventsComponent />} />
           <Route path='/favorites' element={<FavoritesComponent />} />
           <Route path='/book/:id' element={<BookComponent />} />
+          <Route path='/about' element={<HomePage />} />
+          <Route path='/account' element={<HomePage />} />
 
-
-          
-          <Route path='/reviews' element={<UnderConstructionTemplate />} />
-          <Route path='/news' element={<UnderConstructionTemplate />} />
-          <Route path='/company-about' element={<AboutCompany />} />
-          <Route path='/orders' element={<OrdersComponent user={props} />} />
-
-          <Route path='/vehicles'>
-            <Route
-              path='/vehicles/:brand/'
-              element={<AllFromBrandComponent />}
-            />
-            <Route
-              path='/vehicles/:brand/:model'
-              element={<AllFromBrandComponent />}
-            />
-            <Route
-              path='/vehicles/:brand/:model/:minYear'
-              element={<AllFromBrandComponent />}
-            />
-            <Route
-              path='/vehicles/:brand/:model/:minYear/:maxYear'
-              element={<AllFromBrandComponent />}
-            />
-            <Route
-              path='/vehicles/:brand/:model/:minYear/:maxYear/:minPrice'
-              element={<AllFromBrandComponent />}
-            />
-            <Route
-              path='/vehicles/:brand/:model/:minYear/:maxYear/:minPrice/:maxPrice'
-              element={<AllFromBrandComponent />}
-            />
-            <Route
-              path='/vehicles/:brand/:model/:minYear/:maxYear/:minPrice/:maxPrice/:mileage'
-              element={<AllFromBrandComponent />}
-            />
-          </Route>
           {props.role === 'admin' ?
-            <Route path='/moderation/*' element={<ProtectedRoutes />} /> :
+            <Route path='/content-moderation/*' element={<ProtectedRoutes />} /> :
             null}
         </Routes>
       </Grid>

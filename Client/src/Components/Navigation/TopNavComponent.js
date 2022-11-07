@@ -107,10 +107,10 @@ const TopNavComponent = ({ authorized, role }) => {
             Profile
           </ListItemText>
         </MenuItem>
-        {role === 'admin' || role === 'head_cheater' ?
+        {role === 'admin' ?
           <MenuItem onClick={() => {
             handleCloseMenu(setAnchorEl)
-            navigate('/adm')
+            navigate('/content-moderation')
           }}>
             <ListItemIcon>
               <SupervisorAccountRoundedIcon />

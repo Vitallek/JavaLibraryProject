@@ -126,11 +126,14 @@ public class MongoDBDriver {
             return dataJson;
         }
     }
-    public static JSONObject getAllFromCollection(MongoClient mongoClient, String coll, @Nullable Integer take, @Nullable Integer skip){
+    public static JSONObject getAllFromCollection(MongoClient mongoClient, String coll, @Nullable String take, @Nullable String skip){
         try {
             MongoDatabase database = mongoClient.getDatabase(DB_NAME);
             MongoCollection<Document> collection = database.getCollection(coll);
-            FindIterable<Document> findIterable = collection.find().skip(skip).limit(take);
+            FindIterable<Document> findIterable = collection.find();
+            if(take != null && skip != null){
+                findIterable = collection.find().skip(Integer.parseInt(skip)).limit(Integer.parseInt(take));
+            }
             Iterator<Document> iterator = findIterable.iterator();
             ArrayList<Document> items = new ArrayList<>();
             while (iterator.hasNext()) {

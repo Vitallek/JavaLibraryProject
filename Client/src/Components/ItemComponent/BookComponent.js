@@ -69,9 +69,6 @@ const BookComponent = () => {
     if(!userInfoContext.auth) {
       return alert('Unauthorized action')
     }
-    // if(!userInfoContext.favorites && !userInfoContext.favorites.some(favorite => favorite.key === book.key)){
-      
-    // } 
     if(!isFavorite){
       axios.put(`http://${process.env.REACT_APP_SERVER_ADDR}/add-to-favorite`, JSON.stringify({
         email: userInfoContext.email,

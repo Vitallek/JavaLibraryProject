@@ -75,13 +75,13 @@ public class Main {
             res.status(response.getInt( "code"));
             return response;
         });
-        get("/get-all/:collection/:take/:skip", (req, res) -> {
+        get("/get-all/:collection", (req, res) -> {
             System.out.println(req.params(":collection"));
             JSONObject response = MongoDBDriver.getAllFromCollection(
                     mongoClient,
                     req.params(":collection").toLowerCase(),
-                    Integer.parseInt(req.params(":take")),
-                    Integer.parseInt(req.params(":skip"))
+                    req.queryParams("take"),
+                    req.queryParams("skip")
             );
             res.status(response.getInt( "code"));
             return response;

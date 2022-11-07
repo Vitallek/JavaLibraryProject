@@ -27,7 +27,7 @@ const SearchComponent = () => {
     skip: 0
   })
   const requestContent = async (take,skip) => {
-    axios.get(`http://${process.env.REACT_APP_SERVER_ADDR}/get-all/${selectedField.toLocaleLowerCase()}/${take}/${take * skip}`)
+    axios.get(`http://${process.env.REACT_APP_SERVER_ADDR}/get-all/${selectedField.toLocaleLowerCase()}`, {params:{take: take, skip: take * skip}})
       .then(res => {
         console.log(res.data)
         if(selectedField.toLocaleLowerCase() === 'books') return setDisplayedContent(res.data.data.slice().sort((el1,el2) => el2.links.length - el1.links.length))
