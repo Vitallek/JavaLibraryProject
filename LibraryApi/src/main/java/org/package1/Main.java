@@ -138,6 +138,16 @@ public class Main {
             res.status(response.getInt("code"));
             return response;
         });
+        put("/update-book",(req,res) -> {
+            JSONObject response = MongoDBDriver.updateBook(mongoClient,req.body());
+            res.status(response.getInt("code"));
+            return response;
+        });
+        delete("delete-selected-books", (req, res) -> {
+            JSONObject response = MongoDBDriver.deleteSelectedFromBooks(mongoClient,req.body());
+            res.status(response.getInt("code"));
+            return response;
+        });
 
 
 
@@ -167,12 +177,6 @@ public class Main {
             res.status(response.getInt("code"));
             return response;
         });
-
-        delete("delete-selected-books", (req, res) -> {
-            JSONObject response = MongoDBDriver.deleteSelectedFromBooks(mongoClient,req.body());
-            res.status(response.getInt("code"));
-            return response;
-        });
         delete("delete-selected-authors", (req, res) -> {
             JSONObject response = MongoDBDriver.deleteSelectedFromAuthors(mongoClient,req.body());
             res.status(response.getInt("code"));
@@ -180,12 +184,6 @@ public class Main {
         });
         delete("delete-selected-subjects", (req, res) -> {
             JSONObject response = MongoDBDriver.deleteSelectedFromSubjects(mongoClient,req.body());
-            res.status(response.getInt("code"));
-            return response;
-        });
-
-        put("/update-book",(req,res) -> {
-            JSONObject response = MongoDBDriver.updateBook(mongoClient,req.body());
             res.status(response.getInt("code"));
             return response;
         });

@@ -279,100 +279,6 @@ public class MongoDBDriver {
             return dataJson;
         }
     }
-    public static JSONObject deleteSelectedFromSubjects(MongoClient mongoClient, String selected){
-        try {
-            MongoDatabase database = mongoClient.getDatabase(DB_NAME);
-            MongoCollection<Document> collection = database.getCollection(SUBJECTS);
-            ArrayList<Document> selectedDocs =  gson.fromJson(selected, new TypeToken<List<Document>>() {}.getType());
-            selectedDocs.forEach(doc -> {
-                Bson query = eq("subject", doc.get("subject"));
-                collection.deleteOne(query);
-            });
-            return new JSONObject().put("code", 200);
-        } catch (Exception e) {
-            System.out.println(e);
-            JSONObject dataJson = new JSONObject();
-            dataJson.put("desc",e.toString());
-            dataJson.put("code",500);
-            return dataJson;
-        }
-    }
-    public static JSONObject deleteSelectedFromAuthors(MongoClient mongoClient, String selected){
-        try {
-            MongoDatabase database = mongoClient.getDatabase(DB_NAME);
-            MongoCollection<Document> collection = database.getCollection(AUTHORS);
-            ArrayList<Document> selectedDocs =  gson.fromJson(selected, new TypeToken<List<Document>>() {}.getType());
-            selectedDocs.forEach(doc -> {
-                Bson query = eq("author_key", doc.get("author_key"));
-                collection.deleteOne(query);
-            });
-            return new JSONObject().put("code", 200);
-        } catch (Exception e) {
-            System.out.println(e);
-            JSONObject dataJson = new JSONObject();
-            dataJson.put("desc",e.toString());
-            dataJson.put("code",500);
-            return dataJson;
-        }
-    }
-    public static JSONObject deleteSelectedFromBooks(MongoClient mongoClient, String selected){
-        try {
-            MongoDatabase database = mongoClient.getDatabase(DB_NAME);
-            MongoCollection<Document> collection = database.getCollection(BOOKS);
-            ArrayList<Document> selectedDocs =  gson.fromJson(selected, new TypeToken<List<Document>>() {}.getType());
-            selectedDocs.forEach(doc -> {
-                Bson query = eq("key", doc.get("key"));
-                collection.deleteOne(query);
-            });
-            return new JSONObject().put("code", 200);
-        } catch (Exception e) {
-            System.out.println(e);
-            JSONObject dataJson = new JSONObject();
-            dataJson.put("desc",e.toString());
-            dataJson.put("code",500);
-            return dataJson;
-        }
-    }
-    public static JSONObject insert(MongoClient mongoClient, String coll, String data){
-        try {
-            MongoDatabase database = mongoClient.getDatabase(DB_NAME);
-            MongoCollection<Document> collection = database.getCollection(coll);
-            collection.insertMany(gson.fromJson(data, new TypeToken<List<Document>>() {}.getType()));
-            return new JSONObject().put("code", 200);
-        } catch (Exception e) {
-            System.out.println(e);
-            JSONObject dataJson = new JSONObject();
-            dataJson.put("desc",e.toString());
-            dataJson.put("code",500);
-            return dataJson;
-        }
-    }
-    public static JSONObject updateBook(MongoClient mongoClient, String data){
-        try {
-            JSONObject dataJson = new JSONObject(data);
-            MongoDatabase database = mongoClient.getDatabase(DB_NAME);
-            MongoCollection<Document> collection = database.getCollection(BOOKS);
-            if(dataJson.get("value") instanceof String){
-                System.out.println(collection.updateOne(
-                        eq("key", dataJson.getString("key")),
-                        Updates.set(dataJson.getString("field"),dataJson.getString("value"))
-                ));
-            }
-            if(dataJson.get("value") instanceof Integer){
-                System.out.println(collection.updateOne(
-                        eq("key", dataJson.getString("key")),
-                        Updates.set(dataJson.getString("field"),dataJson.getInt("value"))
-                ));
-            }
-            return new JSONObject().put("code", 200);
-        } catch (Exception e) {
-            System.out.println(e);
-            JSONObject dataJson = new JSONObject();
-            dataJson.put("desc",e.toString());
-            dataJson.put("code",500);
-            return dataJson;
-        }
-    }
     public static JSONObject placeComment(MongoClient mongoClient, String bookkey, String data){
         try {
             JSONObject dataJson = new JSONObject(data);
@@ -479,6 +385,52 @@ public class MongoDBDriver {
             return dataJson;
         }
     }
+    public static JSONObject updateBook(MongoClient mongoClient, String data){
+        try {
+            JSONObject dataJson = new JSONObject(data);
+            MongoDatabase database = mongoClient.getDatabase(DB_NAME);
+            MongoCollection<Document> collection = database.getCollection(BOOKS);
+            if(dataJson.get("value") instanceof String){
+                System.out.println(collection.updateOne(
+                        eq("key", dataJson.getString("key")),
+                        Updates.set(dataJson.getString("field"),dataJson.getString("value"))
+                ));
+            }
+            if(dataJson.get("value") instanceof Integer){
+                System.out.println(collection.updateOne(
+                        eq("key", dataJson.getString("key")),
+                        Updates.set(dataJson.getString("field"),dataJson.getInt("value"))
+                ));
+            }
+            return new JSONObject().put("code", 200);
+        } catch (Exception e) {
+            System.out.println(e);
+            JSONObject dataJson = new JSONObject();
+            dataJson.put("desc",e.toString());
+            dataJson.put("code",500);
+            return dataJson;
+        }
+    }
+    public static JSONObject deleteSelectedFromBooks(MongoClient mongoClient, String selected){
+        try {
+            MongoDatabase database = mongoClient.getDatabase(DB_NAME);
+            MongoCollection<Document> collection = database.getCollection(BOOKS);
+            ArrayList<Document> selectedDocs =  gson.fromJson(selected, new TypeToken<List<Document>>() {}.getType());
+            selectedDocs.forEach(doc -> {
+                Bson query = eq("key", doc.get("key"));
+                collection.deleteOne(query);
+            });
+            return new JSONObject().put("code", 200);
+        } catch (Exception e) {
+            System.out.println(e);
+            JSONObject dataJson = new JSONObject();
+            dataJson.put("desc",e.toString());
+            dataJson.put("code",500);
+            return dataJson;
+        }
+    }
+
+
     public static JSONObject updateAuthor(MongoClient mongoClient, String data){
         try {
             JSONObject dataJson = new JSONObject(data);
@@ -506,6 +458,56 @@ public class MongoDBDriver {
                     eq("subject", dataJson.getString("subject")),
                     Updates.set(dataJson.getString("field"),dataJson.getString("value"))
             ));
+            return new JSONObject().put("code", 200);
+        } catch (Exception e) {
+            System.out.println(e);
+            JSONObject dataJson = new JSONObject();
+            dataJson.put("desc",e.toString());
+            dataJson.put("code",500);
+            return dataJson;
+        }
+    }
+    public static JSONObject insert(MongoClient mongoClient, String coll, String data){
+        try {
+            MongoDatabase database = mongoClient.getDatabase(DB_NAME);
+            MongoCollection<Document> collection = database.getCollection(coll);
+            collection.insertMany(gson.fromJson(data, new TypeToken<List<Document>>() {}.getType()));
+            return new JSONObject().put("code", 200);
+        } catch (Exception e) {
+            System.out.println(e);
+            JSONObject dataJson = new JSONObject();
+            dataJson.put("desc",e.toString());
+            dataJson.put("code",500);
+            return dataJson;
+        }
+    }
+    public static JSONObject deleteSelectedFromSubjects(MongoClient mongoClient, String selected){
+        try {
+            MongoDatabase database = mongoClient.getDatabase(DB_NAME);
+            MongoCollection<Document> collection = database.getCollection(SUBJECTS);
+            ArrayList<Document> selectedDocs =  gson.fromJson(selected, new TypeToken<List<Document>>() {}.getType());
+            selectedDocs.forEach(doc -> {
+                Bson query = eq("subject", doc.get("subject"));
+                collection.deleteOne(query);
+            });
+            return new JSONObject().put("code", 200);
+        } catch (Exception e) {
+            System.out.println(e);
+            JSONObject dataJson = new JSONObject();
+            dataJson.put("desc",e.toString());
+            dataJson.put("code",500);
+            return dataJson;
+        }
+    }
+    public static JSONObject deleteSelectedFromAuthors(MongoClient mongoClient, String selected){
+        try {
+            MongoDatabase database = mongoClient.getDatabase(DB_NAME);
+            MongoCollection<Document> collection = database.getCollection(AUTHORS);
+            ArrayList<Document> selectedDocs =  gson.fromJson(selected, new TypeToken<List<Document>>() {}.getType());
+            selectedDocs.forEach(doc -> {
+                Bson query = eq("author_key", doc.get("author_key"));
+                collection.deleteOne(query);
+            });
             return new JSONObject().put("code", 200);
         } catch (Exception e) {
             System.out.println(e);
