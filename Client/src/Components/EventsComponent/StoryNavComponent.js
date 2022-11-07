@@ -11,7 +11,7 @@ const NavComponent = ({ menu, setSelectedStory }) => {
   const [filteredMenu, setFilteredMenu] = useState([])
   useDebounce(() => {
     setFilteredMenu(
-      menu.filter(el => el.event.toLowerCase().includes(search.toLowerCase()))
+      menu.filter(el => el.title.toLowerCase().includes(search.toLowerCase()))
     )
   }, [menu, search], 800)
 

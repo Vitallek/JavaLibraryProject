@@ -15,7 +15,7 @@ import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 const FavoritesComponent = () => {
   const userInfoContext = useContext(UserInfoContext)
   const [searchKeys, setSearchKeys] = useState([])
-  
+
   const [displayedContent, setDisplayedContent] = useState([])
   const [displayedContentFiltered, setDisplayedContentFiltered] = useState([])
 
@@ -75,7 +75,15 @@ const FavoritesComponent = () => {
               <HighlightOffIcon/>
             </IconButton>
           </Stack>
-          <Stack direction="row" sx={{ maxHeight: '80vh', overflowY: 'scroll', p: 1, justifyContent: 'center', flexWrap: 'wrap' }}>
+          <Stack 
+          direction="row" 
+            sx={{ 
+              maxHeight: '80vh', 
+              overflowY: 'auto', 
+              p: 1, 
+              justifyContent: 'center', 
+              flexWrap: 'wrap' 
+            }}>
             {displayedContentFiltered.length > 0 && displayedContentFiltered.map((item, itemIndex) => (
               <BookItemCard
                 key={itemIndex}

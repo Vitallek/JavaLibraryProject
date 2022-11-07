@@ -1,4 +1,4 @@
-import { Card, CardContent, CardMedia, Grid, Link, MenuItem, Rating, Stack, TextField, Typography } from '@mui/material';
+import {Divider, Grid, Link,  Stack, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import Fade from 'react-reveal/Fade'
 import axios from 'axios';
@@ -11,6 +11,16 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthorItemCard, BookItemCard, SubjectItemCard } from '../ItemCardComponent';
 
+const stackResponsiveProps = { 
+  ml:5,
+  p: 5, 
+  pt: 1, 
+  overflowX:'auto', 
+  width:'80vw' ,
+  display:'flex',
+  justifyContent:'space-between',
+  alignItems:'center'
+}
 const HomePage = () => {
   const [content, setContent] = useState([])
   const navigate = useNavigate()
@@ -31,7 +41,7 @@ const HomePage = () => {
   }, [])
 
   return (
-    <Grid container item xs={12} display='flex' direction='column'>
+    <Grid container item xs={12} display='flex' alignItems='center' direction='column'>
       <Fade>
         <Typography
           sx={{ m: 3, display: 'flex', justifyContent: 'center' }}
@@ -46,7 +56,7 @@ const HomePage = () => {
             sx={{
               borderRadius: 30,
               cursor: 'pointer',
-              height: 400,
+              height: '20vw',
               p: 1
               // width: '100%',
               // maxHeight: { xs: 233, md: 167 },
@@ -81,11 +91,15 @@ const HomePage = () => {
         >
           Top books
         </Typography>
-        <Stack direction='row' display='flex' justifyContent='center' alignItems='center' spacing={2} sx={{ p: 5, pt: 1 }}>
+        <Stack 
+          direction='row' 
+          spacing={2} 
+          sx={{...stackResponsiveProps}}>
           {content.books?.sort((el1, el2) => el2.rate - el1.rate).slice(0, 5).map((book, index) =>
             <BookItemCard key={index} book={book}/>
           )}
         </Stack>
+        <Divider/>
       </Fade>
       <Fade>
         <Typography
@@ -96,11 +110,15 @@ const HomePage = () => {
         >
           Top authors
         </Typography>
-        <Stack direction='row' display='flex' justifyContent='center' alignItems='center' spacing={2} sx={{ p: 5, pt: 1 }}>
+        <Stack 
+          direction='row' 
+          spacing={2} 
+          sx={{...stackResponsiveProps}}>
           {content.authors?.sort((el1, el2) => el2.rate - el1.rate).slice(0, 5).map((author, index) =>
             <AuthorItemCard key={index} author={author}/>
           )}
         </Stack>
+        <Divider/>
       </Fade>
       <Fade>
         <Typography
@@ -111,11 +129,15 @@ const HomePage = () => {
         >
           Top genres
         </Typography>
-        <Stack direction='row' display='flex' justifyContent='center' alignItems='center' spacing={2} sx={{ p: 5, pt: 1 }}>
+        <Stack 
+          direction='row' 
+          spacing={2} 
+          sx={{...stackResponsiveProps}}>
           {content.subjects?.sort((el1, el2) => el2.rate - el1.rate).slice(0, 5).map((subject, index) =>
             <SubjectItemCard key={index} subject={subject}/>
           )}
         </Stack>
+        <Divider/>
       </Fade>
       <Fade>
         <Box display='flex' justifyContent='center' sx={{ mb: 10 }}>

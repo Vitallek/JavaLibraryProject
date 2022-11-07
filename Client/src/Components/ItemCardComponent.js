@@ -8,23 +8,25 @@ import axios from 'axios'
 import { useNavigate } from 'react-router-dom';
 
 const width = '200px'
+const cardStyle = {
+  minWidth: 250,
+  maxWidth: 250,
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'space-between',
+  minHeight: '370px',
+  maxHeight: '370px',
+  m: 2,
+}
 export const BookItemCard = ({ book }) => {
   const navigate = useNavigate()
   return (
     <Card
-      sx={{
-        minWidth: 200,
-        maxWidth: width,
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        minHeight: '450px',
-        m: 2
-      }}
+      sx={{...cardStyle}}
     >
       <CardMedia
         component="img"
-        height={200}
+        height={150}
         image={book.image}
         alt="book image"
       />
@@ -39,6 +41,7 @@ export const BookItemCard = ({ book }) => {
         <Typography display='flex' alignItems='center'>
           <Typography component="legend">{parseFloat(book.rate).toFixed(1)}</Typography>
           <Rating name="read-only" value={Math.floor(book.rate)} readOnly />
+          <Typography component="legend">{`(${parseInt(book.rate_amount)})`}</Typography>
         </Typography>
       </CardContent>
       <CardActions>
@@ -58,14 +61,7 @@ export const BookItemCard = ({ book }) => {
 export const AuthorItemCard = ({ author }) => {
   return (
     <Card
-      sx={{
-        minWidth: 200,
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        minHeight: '350px',
-        m: 2
-      }}
+      sx={{...cardStyle}}
     >
       <CardMedia
         component="img"
@@ -80,6 +76,7 @@ export const AuthorItemCard = ({ author }) => {
         <Typography display='flex' alignItems='center'>
           <Typography component="legend">{parseFloat(author.rate).toFixed(1)}</Typography>
           <Rating name="read-only" value={author.rate} readOnly />
+          <Typography component="legend">{`(${parseInt(author.rate_amount)})`}</Typography>
         </Typography>
       </CardContent>
     </Card>
@@ -88,14 +85,7 @@ export const AuthorItemCard = ({ author }) => {
 export const SubjectItemCard = ({ subject }) => {
   return (
     <Card
-      sx={{
-        minWidth: 200,
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        minHeight: '350px',
-        m: 2
-      }}
+      sx={{...cardStyle}}
     >
       <CardMedia
         component="img"
@@ -110,6 +100,7 @@ export const SubjectItemCard = ({ subject }) => {
         <Typography display='flex' alignItems='center'>
           <Typography component="legend">{parseFloat(subject.rate).toFixed(1)}</Typography>
           <Rating name="read-only" value={subject.rate} readOnly />
+          <Typography component="legend">{`(${parseInt(subject.rate_amount)})`}</Typography>
         </Typography>
       </CardContent>
     </Card>

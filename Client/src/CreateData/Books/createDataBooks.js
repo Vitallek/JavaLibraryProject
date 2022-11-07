@@ -79,12 +79,14 @@ const generate = async () => {
       links: links,
       comments: [],
       rate: randomIntFromInterval(30, 50) / 10,
+      rate_amount: randomIntFromInterval(3, 100),
       image: bookPhotos[randomIntFromInterval(0, bookPhotos.length - 1)].urls.regular
     })
     authors.push({
       author_key: item.author_key[0],
       author_name: item.author_name[0],
       rate: randomIntFromInterval(30, 48) / 10,
+      rate_amount: randomIntFromInterval(3, 100),
       image: authorPhotos[randomIntFromInterval(0, authorPhotos.length - 1)].urls.regular
     })
     if (data.subjects !== undefined) {
@@ -92,6 +94,7 @@ const generate = async () => {
         subjects.push({
           subject: s,
           rate: randomIntFromInterval(0, 49) / 10,
+          rate_amount: randomIntFromInterval(3, 50),
           image: subjectPhotos[randomIntFromInterval(0, subjectPhotos.length - 1)].urls.regular
         })
       })
@@ -140,12 +143,13 @@ const createDB = async () => {
   await authorsColl.createIndex({ author_key: 1 },{unique:true})
   await authorsColl.insertMany(authors, { ordered: false })
 
-  const subjectsColl = db.collection('subjects')
-  subjectsColl.deleteMany()
-  await subjectsColl.createIndex({ subject: 1 }, { unique: true })
-  await subjectsColl.insertMany(subjects,{ordered: false})
+  pushSubjects()
+  // const subjectsColl = db.collection('subjects')
+  // subjectsColl.deleteMany()
+  // await subjectsColl.createIndex({ subject: 1 }, { unique: true })
+  // await subjectsColl.insertMany(subjects,{ordered: false})
 }
-const pushOneFromJSON = async () => {
+const pushSubjects = async () => {
   const data = JSON.parse(fs.readFileSync('./subjects.json'))
   await client.connect()
   const db = client.db(dbName)
@@ -155,4 +159,3 @@ const pushOneFromJSON = async () => {
   await subjectsColl.insertMany(data,{ordered: false})
 }
 generate()
-// pushOneFromJSON()
