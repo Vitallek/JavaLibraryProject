@@ -1,4 +1,4 @@
-import { Card, CardContent, CardMedia, Grid, Select, MenuItem, Rating, Stack, TextField, Typography, Autocomplete, Pagination, Tooltip } from '@mui/material';
+import { Card, CardContent, CardMedia, Grid, Select, MenuItem, Rating, Stack, TextField, Typography, Autocomplete, Pagination, Tooltip, IconButton } from '@mui/material';
 import { Box } from '@mui/system';
 import Fade from 'react-reveal/Fade'
 import axios from 'axios';
@@ -11,18 +11,9 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import { AuthorItemCard, BookItemCard, SubjectItemCard } from '../ItemCardComponent';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 
 const takeValues = [10, 20, 30, 50, 100]
-
-const requestContent = async (setDisplayedContent, selectedField, take, skip) => {
-  axios.get(`http://${process.env.REACT_APP_SERVER_ADDR}/get-all/${selectedField.toLocaleLowerCase()}/${take}/${take * skip}`)
-    .then(res => {
-      console.log(res.data)
-      if(selectedField.toLocaleLowerCase() === 'books') return setDisplayedContent(res.data.data.slice().sort((el1,el2) => el2.links.length - el1.links.length))
-      return setDisplayedContent(res.data.data)
-    })
-    .catch(err => alert('can`t get data'))
-}
 
 const SearchComponent = () => {
   const [searchKeys, setSearchKeys] = useState({})
@@ -30,24 +21,41 @@ const SearchComponent = () => {
   const [selectedField, setSelectedField] = useState('Books')
 
   const [displayedContent, setDisplayedContent] = useState([])
+  const [displayedContentFiltered, setDisplayedContentFiltered] = useState([])
   const [skipTakeParams, setSkipTakeParams] = useState({
     take: 10,
     skip: 0
   })
+  const requestContent = async (take,skip) => {
+    axios.get(`http://${process.env.REACT_APP_SERVER_ADDR}/get-all/${selectedField.toLocaleLowerCase()}/${take}/${take * skip}`)
+      .then(res => {
+        console.log(res.data)
+        if(selectedField.toLocaleLowerCase() === 'books') return setDisplayedContent(res.data.data.slice().sort((el1,el2) => el2.links.length - el1.links.length))
+        return setDisplayedContent(res.data.data)
+      })
+      .catch(err => alert('can`t get data'))
+  }
   const searchByKey = (e, collection) => {
     if (e.key !== 'Enter') return
-    axios.get(`http://${process.env.REACT_APP_SERVER_ADDR}/get-with-query/${collection}/${e.target.value}/title`)
+    if(e.target.value.length === 0) return setDisplayedContentFiltered(displayedContent)
+    let field = ''
+    if(selectedField.toLocaleLowerCase() === 'books') field='title'
+    if(selectedField.toLocaleLowerCase() === 'authors') field='author_name'
+    if(selectedField.toLocaleLowerCase() === 'subjects') field='subject'
+    axios.get(`http://${process.env.REACT_APP_SERVER_ADDR}/get-with-query/${collection}/${e.target.value}/${field}`)
       .then(res => {
         setDisplayedContent(res.data.data)
       })
       .catch(err => alert('can`t get data'))
   }
+  
   useEffect(() => {
     console.log(displayedContent)
+    setDisplayedContentFiltered(displayedContent)
   }, [displayedContent])
 
   useEffect(() => {
-    requestContent(setDisplayedContent, selectedField, skipTakeParams.take, skipTakeParams.skip)
+    requestContent(skipTakeParams.take, skipTakeParams.skip)
   }, [selectedField])
 
   useEffect(() => {
@@ -109,9 +117,12 @@ const SearchComponent = () => {
             <Tooltip title='Press enter' placement='right'>
               <SearchRoundedIcon sx={{ color: 'action.active', mr: 1, my: 0.5, fontSize: 30, cursor: 'pointer' }} />
             </Tooltip>
+            <IconButton onClick={() => requestContent(skipTakeParams.take, skipTakeParams.skip)}>
+              <HighlightOffIcon/>
+            </IconButton>
           </Stack>
           <Stack direction="row" sx={{ maxHeight: '80vh', overflowY: 'scroll', p: 1, justifyContent: 'center', flexWrap: 'wrap' }}>
-            {displayedContent.length > 0 && displayedContent.map((item, itemIndex) => {
+            {displayedContentFiltered.length > 0 && displayedContentFiltered.map((item, itemIndex) => {
               if (selectedField.toLocaleLowerCase() === 'books') return (
                 <BookItemCard
                   key={itemIndex}
@@ -142,7 +153,7 @@ const SearchComponent = () => {
               value={skipTakeParams.take}
               onChange={e => {
                 setSkipTakeParams(prev => ({ ...prev, take: e.target.value }))
-                requestContent(setDisplayedContent, selectedField, e.target.value, skipTakeParams.skip)
+                requestContent(e.target.value, skipTakeParams.skip)
               }}
             >
               {takeValues.map(field => (
@@ -156,7 +167,7 @@ const SearchComponent = () => {
               count={searchKeys[selectedField.toLowerCase()] === undefined ? 10 : Math.floor(searchKeys[selectedField.toLocaleLowerCase()].length / skipTakeParams.take)}
               variant="outlined"
               shape="rounded"
-              onChange={(e, value) => requestContent(setDisplayedContent, selectedField, skipTakeParams.take, value)}
+              onChange={(e, value) => requestContent(skipTakeParams.take, value)}
             />
           </Stack>
         </Stack>

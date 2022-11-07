@@ -108,7 +108,7 @@ const BookComponent = () => {
             />
             <Box display='flex' justifyContent='center' alignItems='center'>
               <FavoriteIcon color={!isFavorite ? 'action' : 'primary'} />
-              <Button color={!isFavorite ? 'inherit' : 'primary'} onClick={handleSetFavorite}>
+              <Button disabled={!userInfoContext.auth} color={!isFavorite ? 'inherit' : 'primary'} onClick={handleSetFavorite}>
                 To Favorite
               </Button>
             </Box>
