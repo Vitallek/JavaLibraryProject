@@ -172,8 +172,8 @@ public class Main {
                 return new JSONObject().put("error", e.toString());
             }
         });
-        post("insert-to-coll/:brand",(req,res) -> {
-            JSONObject response = MongoDBDriver.insert(mongoClient,req.params(":brand").toLowerCase(), req.body());
+        post("insert-to-coll/:coll",(req,res) -> {
+            JSONObject response = MongoDBDriver.insert(mongoClient,req.params(":coll").toLowerCase(), req.body());
             res.status(response.getInt("code"));
             return response;
         });

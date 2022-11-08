@@ -143,7 +143,7 @@ const createDB = async () => {
   await authorsColl.createIndex({ author_key: 1 },{unique:true})
   await authorsColl.insertMany(authors, { ordered: false })
 
-  pushSubjects()
+  await pushSubjects()
   // const subjectsColl = db.collection('subjects')
   // subjectsColl.deleteMany()
   // await subjectsColl.createIndex({ subject: 1 }, { unique: true })
@@ -158,4 +158,5 @@ const pushSubjects = async () => {
   await subjectsColl.createIndex({ subject: 1 }, { unique: true })
   await subjectsColl.insertMany(data,{ordered: false})
 }
-generate()
+// generate()
+pushSubjects()

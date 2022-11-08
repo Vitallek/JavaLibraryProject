@@ -34,7 +34,7 @@ const EventsComponent = () => {
   useEffect(() => {
     let mounted = true
     if (!mounted) return
-    axios.get(`http://${process.env.REACT_APP_SERVER_ADDR}/get-all/events/100/0`)
+    axios.get(`http://${process.env.REACT_APP_SERVER_ADDR}/get-all/events`)
       .then(res => {
         console.log(res.data)
         setContent(res.data.data)

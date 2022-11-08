@@ -18,32 +18,19 @@ import { Divider } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 const cleanObject = () => ({
-  type: '',
-  key: '',
-  title: '',
+  type: 'works',
+  key: '1',
+  title: 'Book',
   first_publish_year: 2022,
-  author_key: '',
-  author_name: '',
-  subject: '',
+  author_key: 'A1',
+  author_name: 'Angelina',
+  subject: 'Anime',
   description: '',
   rate: 0,
   rate_amount: 0,
   image: '',
   links: []
 })
-const addItem = (itemProps, refresh, toast) => {
-  const objectToPush = { ...itemProps }
-  objectToPush.images = itemProps.images.split(',')
-  // axios.put(`http://${process.env.REACT_APP_SERVER_ADDR}/insert-to-coll/${selectedBrand.toLowerCase().replace(/ /g, '-')}`,
-  //   JSON.stringify([objectToPush])
-  // )
-  // .then(response => {
-  //   toast.current.show({severity: 'success', summary: 'Уведомление', detail: 'Данные добавлены', position:'bottom-right'});
-  //   refresh()
-  // })
-  // .catch(err => console.log(err))
-  console.log(objectToPush)
-}
 const TextFieldValidatePositiveInt = ({ label, field, prop, setItemProps }) => {
   return (
     <TextField
@@ -76,6 +63,11 @@ const AddBookDialog = ({ open, onClose, refresh }) => {
   const [itemProps, setItemProps] = useState(cleanObject())
   const [links, setLinks] = useState([])
   const toast = useRef(null)
+  const handleUpdateLink = (field, value, index) => {
+    const newLinks = [...links]
+    newLinks[index][field] = value
+    setLinks(newLinks)
+  }
   const handleAddLink = () => {
     const newLinks = [...links]
     newLinks.push({
@@ -88,6 +80,21 @@ const AddBookDialog = ({ open, onClose, refresh }) => {
     const newLinks = [...links]
     newLinks.pop()
     setLinks(newLinks)
+  }
+  const addItem = () => {
+    const objectToPush = { ...itemProps }
+    links.forEach(link => {
+      if(link.url.length > 0 && link.title.length > 0) objectToPush.links.push(link)
+    })
+    axios.post(`http://${process.env.REACT_APP_SERVER_ADDR}/insert-to-coll/books`,
+      JSON.stringify([objectToPush])
+    )
+    .then(response => {
+      toast.current.show({severity: 'success', summary: 'Уведомление', detail: 'Книга добавлена', position:'bottom-right'});
+      refresh()
+    })
+    .catch(err => console.log(err))
+    console.log(objectToPush)
   }
   return (
     <Dialog
@@ -115,6 +122,7 @@ const AddBookDialog = ({ open, onClose, refresh }) => {
             <TextFieldNoValidate label='Key' field='key' prop={itemProps.key} setItemProps={setItemProps} />
             <TextFieldNoValidate label='Title' field='title' prop={itemProps.title} setItemProps={setItemProps} />
             <TextFieldNoValidate label='Type' field='type' prop={itemProps.type} setItemProps={setItemProps} />
+            <TextFieldNoValidate label='Subjetc' field='subject' prop={itemProps.subject} setItemProps={setItemProps} />
             <TextFieldNoValidate label='Author_key' field='author_key' prop={itemProps.author_key} setItemProps={setItemProps} />
             <TextFieldNoValidate label='Author_name' field='author_name' prop={itemProps.author_name} setItemProps={setItemProps} />
             <TextFieldNoValidate label='ImageLink' field='image' prop={itemProps.image} setItemProps={setItemProps} />
@@ -135,7 +143,7 @@ const AddBookDialog = ({ open, onClose, refresh }) => {
           </Stack>
 
           <Stack
-            sx={{ overflow: 'scroll', maxHeight: '40vh' }}
+            sx={{ overflow: 'scroll',minWidth: '50%', maxHeight: '40vh' }}
             direction='column'
             spacing={2}
           >
@@ -157,16 +165,16 @@ const AddBookDialog = ({ open, onClose, refresh }) => {
                   placeholder="https://image.com,https://image2.com"
                   // multiline
                   variant="standard"
-                  value={itemProps.images}
-                  onChange={(e) => setItemProps(prev => ({ ...prev, images: e.target.value }))}
+                  value={itemProps.links[index]?.url}
+                  onChange={(e) => handleUpdateLink('url', e.target.value, index)}
                 />
                 <TextField
                   label="Link title"
                   placeholder="https://image.com,https://image2.com"
                   // multiline
                   variant="standard"
-                  value={itemProps.images}
-                  onChange={(e) => setItemProps(prev => ({ ...prev, images: e.target.value }))}
+                  value={itemProps.links[index]?.title}
+                  onChange={(e) => handleUpdateLink('title', e.target.value, index)}
                 />
               </Stack>
             ))}
@@ -182,7 +190,7 @@ const AddBookDialog = ({ open, onClose, refresh }) => {
         }}>
           Отмена
         </Button>
-        <Button onClick={() => addItem(itemProps, refresh, toast)}>
+        <Button onClick={addItem}>
           Добавить
         </Button>
       </DialogActions>
