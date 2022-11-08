@@ -12,7 +12,9 @@ import {
   Select,
   MenuItem,
   IconButton,
-  Typography
+  Typography,
+  Autocomplete,
+  createFilterOptions
 } from "@mui/material";
 import { Divider } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
@@ -31,9 +33,13 @@ const cleanObject = () => ({
   image: '',
   links: []
 })
-const TextFieldValidatePositiveInt = ({ label, field, prop, setItemProps }) => {
+const filterOptions = createFilterOptions({
+  stringify: ({ author_name, author_key }) => `${author_name} ${author_key}`
+});
+const TextFieldValidatePositiveInt = ({ label, field, prop, setItemProps, disabled }) => {
   return (
     <TextField
+      disabled={disabled !== undefined && disabled}
       label={label}
       variant="standard"
       value={prop}
@@ -50,18 +56,44 @@ const TextFieldValidatePositiveInt = ({ label, field, prop, setItemProps }) => {
       }}
     />)
 }
-const TextFieldNoValidate = ({ label, field, prop, setItemProps }) => {
+const TextFieldNoValidate = ({ label, field, prop, setItemProps, disabled }) => {
   return (
     <TextField
+      disabled={disabled !== undefined && disabled}
       label={label}
       variant="standard"
       value={prop}
       onChange={(e) => setItemProps(prev => ({ ...prev, [field]: e.target.value }))}
     />)
 }
+const getAllData = async (setAllData) => {
+  let authors = []
+  await axios.get(`http://${process.env.REACT_APP_SERVER_ADDR}/get-all/authors`)
+  .then(res => authors = [...res.data.data])
+  .catch(err => alert('error on load authors'))
+  let subjects = []
+  await axios.get(`http://${process.env.REACT_APP_SERVER_ADDR}/get-all/subjects`)
+  .then(res => subjects = [...res.data.data])
+  .catch(err => alert('error on load genres'))
+  authors.forEach(author => author.label = author.author_name)
+  subjects.forEach(subject => subject.label = subject.subject)
+  setAllData({
+    authors: authors,
+    subjects: subjects
+  })
+  console.log({
+    authors: authors,
+    subjects: subjects
+  })
+}
 const AddBookDialog = ({ open, onClose, refresh }) => {
   const [itemProps, setItemProps] = useState(cleanObject())
   const [links, setLinks] = useState([])
+  const [allData, setAllData] = useState({})
+  useEffect(() => {
+    getAllData(setAllData)
+  },[])
+
   const toast = useRef(null)
   const handleUpdateLink = (field, value, index) => {
     const newLinks = [...links]
@@ -96,13 +128,25 @@ const AddBookDialog = ({ open, onClose, refresh }) => {
     .catch(err => console.log(err))
     console.log(objectToPush)
   }
+  const setAuthor = (e) => {
+    if (e.key !== 'Enter') return
+    if(e.target.value.length === 0) return 
+    const name = e.target.value.split('_id_')[0]
+    const key = e.target.value.split('_id_')[1]
+    setItemProps(prev => ({...prev, author_name: name, author_key: key}))
+  }
+  const setSubject = (e) => {
+    if (e.key !== 'Enter') return
+    if(e.target.value.length === 0) return 
+    setItemProps(prev => ({...prev, subject: e.target.value}))
+  }
   return (
     <Dialog
       open={open}
       onClose={onClose}
       aria-labelledby="responsive-dialog-title"
       fullWidth
-      maxWidth='md'
+      maxWidth='lg'
     >
       <Toast ref={toast} position="bottom-right" />
       <DialogTitle id="responsive-dialog-title">
@@ -117,20 +161,40 @@ const AddBookDialog = ({ open, onClose, refresh }) => {
           <Stack
             direction='column'
             spacing={2}
+            sx={{ overflow: 'scroll',minWidth: '30%', maxHeight: '40vh' }}
           >
+            {allData.authors && <Autocomplete
+              selectOnFocus={false}
+              filterOptions={filterOptions}
+              getOptionLabel={({ author_name, author_key }) => {
+                // this is how our option will be displayed when selected
+                // remove the `id` here
+                return `${author_name}_id_${author_key}`;
+              }}
+              filterSelectedOptions
+
+              options={allData.authors}
+              sx={{ width: 300 }}
+              renderInput={(props) => <TextField {...props} label={'Authors'} onKeyPress={e => setAuthor(e)} />}
+            />}
+            <TextFieldNoValidate label='Author_key' field='author_key' disabled prop={itemProps.author_key} setItemProps={setItemProps} />
             <TextFieldValidatePositiveInt label='Year' field='first_publish_year' prop={itemProps.first_publish_year} setItemProps={setItemProps} />
             <TextFieldNoValidate label='Key' field='key' prop={itemProps.key} setItemProps={setItemProps} />
             <TextFieldNoValidate label='Title' field='title' prop={itemProps.title} setItemProps={setItemProps} />
             <TextFieldNoValidate label='Type' field='type' prop={itemProps.type} setItemProps={setItemProps} />
-            <TextFieldNoValidate label='Subjetc' field='subject' prop={itemProps.subject} setItemProps={setItemProps} />
-            <TextFieldNoValidate label='Author_key' field='author_key' prop={itemProps.author_key} setItemProps={setItemProps} />
-            <TextFieldNoValidate label='Author_name' field='author_name' prop={itemProps.author_name} setItemProps={setItemProps} />
+            {allData.subjects && <Autocomplete
+              selectOnFocus={false}
+              options={allData.subjects}
+              sx={{ width: 300 }}
+              renderInput={(props) => <TextField {...props} label={'Subjects'} onChange={e => setSubject(e)} />}
+            />}
             <TextFieldNoValidate label='ImageLink' field='image' prop={itemProps.image} setItemProps={setItemProps} />
           </Stack>
 
           <Stack
             direction='column'
             spacing={2}
+            sx={{ overflow: 'scroll',minWidth: '30%', maxHeight: '40vh' }}
           >
             <TextField
               label="Description"
@@ -143,7 +207,7 @@ const AddBookDialog = ({ open, onClose, refresh }) => {
           </Stack>
 
           <Stack
-            sx={{ overflow: 'scroll',minWidth: '50%', maxHeight: '40vh' }}
+            sx={{ overflow: 'scroll',minWidth: '30%', maxHeight: '40vh' }}
             direction='column'
             spacing={2}
           >

@@ -65,25 +65,25 @@ const SearchComponent = () => {
     //   .then(res => setContent(res.data))
     //   .catch(err => alert('error occured'))
     axios.get(`http://${process.env.REACT_APP_SERVER_ADDR}/get-search-keys`)
-      .then(res => {
-        delete res.data.code
-        let processedData = {
-          books: [],
-          authors: [],
-          subjects: []
-        }
-        for (const [key, items] of Object.entries(res.data)) {
-          items.forEach((element, index) => {
-            delete element._id
-            if (key === 'books') processedData.books.push(element.title)
-            if (key === 'authors') processedData.authors.push(element.author_name)
-            if (key === 'subjects') processedData.subjects.push(element.subject)
-          })
-        }
-        setSearchKeys(processedData)
-        setFields(Object.keys(processedData).map(field => field.charAt(0).toUpperCase() + field.slice(1)))
-      })
-      .catch(err => alert('can`t get filter options'))
+    .then(res => {
+      delete res.data.code
+      let processedData = {
+        books: [],
+        authors: [],
+        subjects: []
+      }
+      for (const [key, items] of Object.entries(res.data)) {
+        items.forEach((element, index) => {
+          delete element._id
+          if (key === 'books') processedData.books.push(element.title)
+          if (key === 'authors') processedData.authors.push(element.author_name)
+          if (key === 'subjects') processedData.subjects.push(element.subject)
+        })
+      }
+      setSearchKeys(processedData)
+      setFields(Object.keys(processedData).map(field => field.charAt(0).toUpperCase() + field.slice(1)))
+    })
+    .catch(err => alert('can`t get filter options'))
     return () => mounted = false
   }, [])
 
