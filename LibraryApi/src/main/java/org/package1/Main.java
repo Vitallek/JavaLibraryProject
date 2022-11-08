@@ -148,7 +148,11 @@ public class Main {
             res.status(response.getInt("code"));
             return response;
         });
-
+        post("insert-to-coll/:coll",(req,res) -> {
+            JSONObject response = MongoDBDriver.insert(mongoClient,req.params(":coll").toLowerCase(), req.body());
+            res.status(response.getInt("code"));
+            return response;
+        });
 
 
         get("get-images/:query", (req, res) -> {
@@ -172,11 +176,7 @@ public class Main {
                 return new JSONObject().put("error", e.toString());
             }
         });
-        post("insert-to-coll/:coll",(req,res) -> {
-            JSONObject response = MongoDBDriver.insert(mongoClient,req.params(":coll").toLowerCase(), req.body());
-            res.status(response.getInt("code"));
-            return response;
-        });
+
         delete("delete-selected-authors", (req, res) -> {
             JSONObject response = MongoDBDriver.deleteSelectedFromAuthors(mongoClient,req.body());
             res.status(response.getInt("code"));

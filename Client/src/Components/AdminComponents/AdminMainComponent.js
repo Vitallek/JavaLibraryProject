@@ -8,6 +8,8 @@ import CarsComponent from '../Admin/CarsComponent';
 import DeployDays from '../Admin/DeployDays';
 import AdminOrdersComponent from '../Admin/AdminOrdersComponent';
 import BooksTableComponent from './BooksTableComponent';
+import AuthorsTableComponent from './AuthorsTableComponent';
+import SubjectsTableComponent from './SubjectsTableComponent';
 
 const AdminMainComponent = () => {
   const userInfoContext = useContext(UserInfoContext)
@@ -42,9 +44,9 @@ const AdminMainComponent = () => {
         </Tabs>
         {activeTab === 0 && <BooksTableComponent userInfoContext={userInfoContext}
         />}
-        {activeTab === 1 && <BooksTableComponent userInfoContext={userInfoContext}
+        {activeTab === 1 && <AuthorsTableComponent userInfoContext={userInfoContext}
         />}
-        {activeTab === 2 && <BooksTableComponent userInfoContext={userInfoContext}
+        {activeTab === 2 && <SubjectsTableComponent userInfoContext={userInfoContext}
         />}
         {activeTab === 3 && <BooksTableComponent userInfoContext={userInfoContext}
         />}

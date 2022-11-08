@@ -436,10 +436,25 @@ public class MongoDBDriver {
             JSONObject dataJson = new JSONObject(data);
             MongoDatabase database = mongoClient.getDatabase(DB_NAME);
             MongoCollection<Document> collection = database.getCollection(AUTHORS);
-            System.out.println(collection.updateOne(
-                    eq("author_key", dataJson.getString("author_key")),
-                    Updates.set(dataJson.getString("field"),dataJson.getString("value"))
-            ));
+            System.out.println(dataJson);
+            if(dataJson.get("value") instanceof String){
+                System.out.println(collection.updateOne(
+                        eq("author_key", dataJson.getString("author_key")),
+                        Updates.set(dataJson.getString("field"),dataJson.getString("value"))
+                ));
+            }
+            if(dataJson.get("value") instanceof Double){
+                System.out.println(collection.updateOne(
+                        eq("author_key", dataJson.getString("author_key")),
+                        Updates.set(dataJson.getString("field"),dataJson.getDouble("value"))
+                ));
+            }
+            if(dataJson.get("value") instanceof Integer){
+                System.out.println(collection.updateOne(
+                        eq("author_key", dataJson.getString("author_key")),
+                        Updates.set(dataJson.getString("field"),dataJson.getInt("value"))
+                ));
+            }
             return new JSONObject().put("code", 200);
         } catch (Exception e) {
             System.out.println(e);
@@ -454,10 +469,24 @@ public class MongoDBDriver {
             JSONObject dataJson = new JSONObject(data);
             MongoDatabase database = mongoClient.getDatabase(DB_NAME);
             MongoCollection<Document> collection = database.getCollection(SUBJECTS);
-            System.out.println(collection.updateOne(
-                    eq("subject", dataJson.getString("subject")),
-                    Updates.set(dataJson.getString("field"),dataJson.getString("value"))
-            ));
+            if(dataJson.get("value") instanceof String){
+                System.out.println(collection.updateOne(
+                        eq("subject", dataJson.getString("subject")),
+                        Updates.set(dataJson.getString("field"),dataJson.getString("value"))
+                ));
+            }
+            if(dataJson.get("value") instanceof Double){
+                System.out.println(collection.updateOne(
+                        eq("subject", dataJson.getString("subject")),
+                        Updates.set(dataJson.getString("field"),dataJson.getDouble("value"))
+                ));
+            }
+            if(dataJson.get("value") instanceof Integer){
+                System.out.println(collection.updateOne(
+                        eq("subject", dataJson.getString("subject")),
+                        Updates.set(dataJson.getString("field"),dataJson.getInt("value"))
+                ));
+            }
             return new JSONObject().put("code", 200);
         } catch (Exception e) {
             System.out.println(e);
