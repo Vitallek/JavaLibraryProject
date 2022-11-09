@@ -12,6 +12,7 @@ import {
   createFilterOptions
 } from "@mui/material";
 import { Divider } from "@mui/material";
+import { UserInfoContext } from "../../UserInfoContext";
 const cleanObject = () => ({
   author_key: 'A1',
   author_name: 'Angelina',
@@ -72,7 +73,7 @@ const getAllData = async (setAllData) => {
     subjects: subjects
   })
 }
-const AddAuthorDialog = ({ open, onClose, refresh }) => {
+const AddAuthorDialog = ({ open, onClose, refresh, userInfoContext }) => {
   const [itemProps, setItemProps] = useState(cleanObject())
   const [allData, setAllData] = useState({})
   useEffect(() => {
@@ -83,7 +84,7 @@ const AddAuthorDialog = ({ open, onClose, refresh }) => {
 
   const addItem = () => {
     const objectToPush = { ...itemProps }
-    axios.post(`http://${process.env.REACT_APP_SERVER_ADDR}/insert-to-coll/authors`,
+    axios.post(`http://${process.env.REACT_APP_SERVER_ADDR}/insert-to-coll/authors/${userInfoContext.token}`,
       JSON.stringify([objectToPush])
     )
     .then(response => {

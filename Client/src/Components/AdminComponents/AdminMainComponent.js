@@ -4,9 +4,6 @@ import "primereact/resources/primereact.css";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import { useEffect, useState, useContext } from 'react';
 import { UserInfoContext } from '../../UserInfoContext';
-import CarsComponent from '../Admin/CarsComponent';
-import DeployDays from '../Admin/DeployDays';
-import AdminOrdersComponent from '../Admin/AdminOrdersComponent';
 import BooksTableComponent from './BooksTableComponent';
 import AuthorsTableComponent from './AuthorsTableComponent';
 import SubjectsTableComponent from './SubjectsTableComponent';
@@ -40,7 +37,7 @@ const AdminMainComponent = () => {
           <Tab label="Books" />
           <Tab label="Authors" />
           <Tab label="Genres" />
-          <Tab label="Content" />
+          {/* <Tab label="Content" /> */}
         </Tabs>
         {activeTab === 0 && <BooksTableComponent userInfoContext={userInfoContext}
         />}

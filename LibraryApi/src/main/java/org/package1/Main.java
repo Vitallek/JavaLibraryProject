@@ -40,7 +40,6 @@ public class Main {
             response.header("Access-Control-Allow-Origin", origin);
             response.header("Access-Control-Request-Method", methods);
             response.header("Access-Control-Allow-Headers", headers);
-            // Note: this may or may not be necessary in your particular application
             response.type("application/json");
         });
     }
@@ -112,50 +111,55 @@ public class Main {
             res.status(response.getInt( "code"));
             return response;
         });
-        put("/place-comment/:bookkey",(req,res) -> {
-            JSONObject response = MongoDBDriver.placeComment(mongoClient,req.params(":bookkey"), req.body());
+        put("/place-comment/:bookkey/:token",(req,res) -> {
+            JSONObject response = MongoDBDriver.placeComment(mongoClient,req.params(":bookkey"), req.body(), req.params(":token"));
             res.status(response.getInt("code"));
             return response;
         });
-        put("/update-comment/:bookkey/:id",(req,res) -> {
-            JSONObject response = MongoDBDriver.updateComment(mongoClient,req.params(":bookkey"), req.params(":id"),req.body());
+        put("/update-comment/:bookkey/:id/:token",(req,res) -> {
+            JSONObject response = MongoDBDriver.updateComment(mongoClient,req.params(":bookkey"), req.params(":id"),req.body(), req.params(":token"));
             res.status(response.getInt("code"));
             return response;
         });
-        delete("/delete-comment/:bookkey/:id",(req,res) -> {
-            JSONObject response = MongoDBDriver.deleteComment(mongoClient,req.params(":bookkey"), req.params(":id"));
+        delete("/delete-comment/:bookkey/:id/:token",(req,res) -> {
+            JSONObject response = MongoDBDriver.deleteComment(mongoClient,req.params(":bookkey"), req.params(":id"),req.params(":token"));
             res.status(response.getInt("code"));
             return response;
         });
-        put("/add-to-favorite",(req,res) -> {
-            JSONObject response = MongoDBDriver.addToFavotite(mongoClient,req.body());
+        put("/add-to-favorite/:token",(req,res) -> {
+            JSONObject response = MongoDBDriver.addToFavotite(mongoClient,req.body(), req.params(":token"));
             res.status(response.getInt("code"));
             return response;
         });
-        delete("/remove-from-favorite",(req,res) -> {
+        delete("/remove-from-favorite/:token",(req,res) -> {
             System.out.println(req.body());
-            JSONObject response = MongoDBDriver.removeFromFavorites(mongoClient,req.body());
+            JSONObject response = MongoDBDriver.removeFromFavorites(mongoClient,req.body(), req.params(":token"));
             res.status(response.getInt("code"));
             return response;
         });
-        put("/update-book",(req,res) -> {
-            JSONObject response = MongoDBDriver.updateBook(mongoClient,req.body());
+        put("/update-book/:token",(req,res) -> {
+            JSONObject response = MongoDBDriver.updateBook(mongoClient,req.body(), req.params(":token"));
             res.status(response.getInt("code"));
             return response;
         });
-        delete("delete-selected-books", (req, res) -> {
-            JSONObject response = MongoDBDriver.deleteSelectedFromBooks(mongoClient,req.body());
+        put("/update-username/:token",(req,res) -> {
+            JSONObject response = MongoDBDriver.updateUsername(mongoClient,req.body(), req.params(":token"));
             res.status(response.getInt("code"));
             return response;
         });
-        post("insert-to-coll/:coll",(req,res) -> {
-            JSONObject response = MongoDBDriver.insert(mongoClient,req.params(":coll").toLowerCase(), req.body());
+        delete("delete-selected-books/:token", (req, res) -> {
+            JSONObject response = MongoDBDriver.deleteSelectedFromBooks(mongoClient,req.body(), req.params(":token"));
+            res.status(response.getInt("code"));
+            return response;
+        });
+        post("insert-to-coll/:coll/:token",(req,res) -> {
+            JSONObject response = MongoDBDriver.insert(mongoClient,req.params(":coll").toLowerCase(), req.body(), req.params(":token"));
             res.status(response.getInt("code"));
             return response;
         });
 
 
-        get("get-images/:query", (req, res) -> {
+        get("get-images/:query/:token", (req, res) -> {
             System.out.println(req.params(":query"));
 
             final OkHttpClient client = new OkHttpClient();
@@ -177,23 +181,23 @@ public class Main {
             }
         });
 
-        delete("delete-selected-authors", (req, res) -> {
-            JSONObject response = MongoDBDriver.deleteSelectedFromAuthors(mongoClient,req.body());
+        delete("delete-selected-authors/:token", (req, res) -> {
+            JSONObject response = MongoDBDriver.deleteSelectedFromAuthors(mongoClient,req.body(), req.params(":token"));
             res.status(response.getInt("code"));
             return response;
         });
-        delete("delete-selected-subjects", (req, res) -> {
-            JSONObject response = MongoDBDriver.deleteSelectedFromSubjects(mongoClient,req.body());
+        delete("delete-selected-subjects/:token", (req, res) -> {
+            JSONObject response = MongoDBDriver.deleteSelectedFromSubjects(mongoClient,req.body(), req.params(":token"));
             res.status(response.getInt("code"));
             return response;
         });
-        put("/update-author",(req,res) -> {
-            JSONObject response = MongoDBDriver.updateAuthor(mongoClient,req.body());
+        put("/update-author/:token",(req,res) -> {
+            JSONObject response = MongoDBDriver.updateAuthor(mongoClient,req.body(), req.params(":token"));
             res.status(response.getInt("code"));
             return response;
         });
-        put("/update-subject",(req,res) -> {
-            JSONObject response = MongoDBDriver.updateSubject(mongoClient,req.body());
+        put("/update-subject/:token",(req,res) -> {
+            JSONObject response = MongoDBDriver.updateSubject(mongoClient,req.body(), req.params(":token"));
             res.status(response.getInt("code"));
             return response;
         });

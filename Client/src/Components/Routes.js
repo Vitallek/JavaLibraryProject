@@ -12,6 +12,7 @@ import SearchComponent from "./Search/SearchComponent";
 import BookComponent from "./ItemComponent/BookComponent";
 import EventsComponent from "./EventsComponent/EventsComponent";
 import FavoritesComponent from "./Favorites/FavoritesComponent";
+import ProfileComponent from "./ProfilePage/ProfileComponent";
 
 const CustomRoutes = ({ }) => {
   const props = useContext(UserInfoContext)
@@ -35,8 +36,8 @@ const CustomRoutes = ({ }) => {
           <Route path='/events' element={<EventsComponent />} />
           <Route path='/favorites' element={<FavoritesComponent />} />
           <Route path='/book/:id' element={<BookComponent />} />
-          <Route path='/about' element={<HomePage />} />
-          <Route path='/account' element={<HomePage />} />
+          <Route path='/about' element={<AboutCompany />} />
+          <Route path='/account' element={<ProfileComponent />} />
 
           {props.role === 'admin' ?
             <Route path='/content-moderation/*' element={<ProtectedRoutes />} /> :

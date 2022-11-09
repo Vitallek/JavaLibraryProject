@@ -31,17 +31,17 @@ const getItems = (setItems) => {
     })
     .catch(err => alert('can`t get data'))
 }
-const deleteSelected = (selectedProducts, setProducts, toast) => {
+const deleteSelected = (selectedProducts, setProducts, toast,userInfoContext) => {
   console.log(selectedProducts)
-  axios.delete(`http://${process.env.REACT_APP_SERVER_ADDR}/delete-selected-books`, { data: JSON.stringify(selectedProducts) })
+  axios.delete(`http://${process.env.REACT_APP_SERVER_ADDR}/delete-selected-books/${userInfoContext.token}`, { data: JSON.stringify(selectedProducts) })
     .then(response => {
       getItems(setProducts)
       toast.current.show({severity: 'success', summary: 'Уведомление', detail: 'Данные удалены'});
     })
     .catch(err => console.log(err))
 }
-const updateItem = (field, value, rowData, toast) => {
-  axios.put(`http://${process.env.REACT_APP_SERVER_ADDR}/update-book`, 
+const updateItem = (field, value, rowData, toast,userInfoContext) => {
+  axios.put(`http://${process.env.REACT_APP_SERVER_ADDR}/update-book/${userInfoContext.token}`, 
   JSON.stringify({
     field: field,
     value: value, 
@@ -52,7 +52,7 @@ const updateItem = (field, value, rowData, toast) => {
   })
   .catch(err => console.log(err))
 }
-const BooksTableComponent = () => {
+const BooksTableComponent = ({userInfoContext}) => {
   const [items, setItems] = useState([])
   const [selectedItems, setSelectedItems] = useState([]);
   const [expandedRows, setExpandedRows] = useState([])
@@ -87,7 +87,7 @@ const BooksTableComponent = () => {
         }
         if (newValue.trim().length > 0) {
           rowData[field] = newValue;
-          updateItem(field, newValue, rowData, toast)
+          updateItem(field, newValue, rowData, toast,userInfoContext)
         }
         break;
       case 'first_publish_year':
@@ -95,7 +95,7 @@ const BooksTableComponent = () => {
       case 'rate_amount':
         if (isPositiveInteger(newValue)){
           rowData[field] = newValue;
-          updateItem(field, parseInt(newValue), rowData, toast)
+          updateItem(field, parseInt(newValue), rowData, toast,userInfoContext)
         }
         else
           event.preventDefault();
@@ -103,7 +103,7 @@ const BooksTableComponent = () => {
       default:
         if (newValue.trim().length > 0) {
           rowData[field] = newValue;
-          updateItem(field, newValue, rowData, toast)
+          updateItem(field, newValue, rowData, toast,userInfoContext)
         }
         else
           event.preventDefault();
@@ -138,7 +138,7 @@ const BooksTableComponent = () => {
           disabled={selectedItems.length === 0}
           color='error'
           onClick={() => {
-            deleteSelected(selectedItems, setItems, toast)
+            deleteSelected(selectedItems, setItems, toast,userInfoContext)
             setSelectedItems([])
           }}
         >
@@ -172,6 +172,7 @@ const BooksTableComponent = () => {
         open={openAddItemDialog}
         onClose={handleCloseAddItemDialog}
         refresh={refreshFromDialog}
+        userInfoContext={userInfoContext}
       />
     </>
   )

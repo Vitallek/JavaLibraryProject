@@ -72,7 +72,7 @@ const getAllData = async (setAllData) => {
     subjects: subjects
   })
 }
-const AddSubjectDialog = ({ open, onClose, refresh }) => {
+const AddSubjectDialog = ({ open, onClose, refresh, userInfoContext }) => {
   const [itemProps, setItemProps] = useState(cleanObject())
   const [allData, setAllData] = useState({})
   useEffect(() => {
@@ -83,7 +83,7 @@ const AddSubjectDialog = ({ open, onClose, refresh }) => {
 
   const addItem = () => {
     const objectToPush = { ...itemProps }
-    axios.post(`http://${process.env.REACT_APP_SERVER_ADDR}/insert-to-coll/subjects`,
+    axios.post(`http://${process.env.REACT_APP_SERVER_ADDR}/insert-to-coll/subjects/${userInfoContext.token}`,
       JSON.stringify([objectToPush])
     )
     .then(response => {

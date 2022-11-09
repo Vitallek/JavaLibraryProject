@@ -29,11 +29,11 @@ const SignInDialog = ({ dialogOpen, setOpen }) => {
       </DialogContent>
       <DialogActions>
         {dialogOpen.type === 1 ? 
-        <Button variant="outlined" onClick={() => setOpen(prev => ({...prev, type: 0}))}>
+        <Button variant="outlined" sx={{borderRadius: 10}}onClick={() => setOpen(prev => ({...prev, type: 0}))}>
           Уже есть аккаунт?
         </Button> 
         : 
-        <Button variant="outlined" onClick={() => setOpen(prev => ({...prev, type: 1}))}>
+        <Button variant="outlined" sx={{borderRadius: 10}} onClick={() => setOpen(prev => ({...prev, type: 1}))}>
           Зарегистрироваться
         </Button> 
         }

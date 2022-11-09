@@ -22,6 +22,7 @@ const App = () => {
           role: responseJSON.role, 
           email: responseJSON.email, 
           name: responseJSON.name,
+          token: responseJSON.token,
           favorites: responseJSON.favorites
         })
         // if(responseJSON.msg.code === 200) setAuthorized(true)

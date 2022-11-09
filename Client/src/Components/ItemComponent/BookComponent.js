@@ -38,7 +38,7 @@ const BookComponent = () => {
       id: `${userInfoContext.email+updatedBook.comments.length}`
     }
     updatedBook.comments.push(comment)
-    axios.put(`http://${process.env.REACT_APP_SERVER_ADDR}/place-comment/${book.key}`, JSON.stringify(comment))
+    axios.put(`http://${process.env.REACT_APP_SERVER_ADDR}/place-comment/${book.key}/${userInfoContext.token}`, JSON.stringify(comment))
       .then(response => console.log(response))
       .catch(err => console.log(err))
     setBook(updatedBook)
@@ -70,14 +70,14 @@ const BookComponent = () => {
       return alert('Unauthorized action')
     }
     if(!isFavorite){
-      axios.put(`http://${process.env.REACT_APP_SERVER_ADDR}/add-to-favorite`, JSON.stringify({
+      axios.put(`http://${process.env.REACT_APP_SERVER_ADDR}/add-to-favorite/${userInfoContext.token}`, JSON.stringify({
         email: userInfoContext.email,
         key: book.key
       }))
       .then(response => setIsFavorite(prev => !prev))
       .catch(err => console.log(err))
     } else {
-      axios.delete(`http://${process.env.REACT_APP_SERVER_ADDR}/remove-from-favorite`, {data:JSON.stringify({
+      axios.delete(`http://${process.env.REACT_APP_SERVER_ADDR}/remove-from-favorite/${userInfoContext.token}`, {data:JSON.stringify({
         email: userInfoContext.email,
         key: book.key
       })})

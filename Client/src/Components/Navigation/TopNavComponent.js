@@ -99,7 +99,10 @@ const TopNavComponent = ({ authorized, role }) => {
           'aria-labelledby': 'basic-button',
         }}
       >
-        <MenuItem onClick={() => { alert('todo') }}>
+        <MenuItem  onClick={() => { 
+          handleCloseMenu(setAnchorEl)
+          navigate('/account')
+         }}>
           <ListItemIcon>
             <AccountCircleRoundedIcon />
           </ListItemIcon>

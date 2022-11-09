@@ -34,7 +34,7 @@ const  CommentsComponent = ({comments,bookKey}) => {
     if(e.keyCode === escapeKey) setIsEditComment(prev => ({...prev,state: !isEditComment.state}))
   }
   const updateComment = (comment) => {
-    axios.put(`http://${process.env.REACT_APP_SERVER_ADDR}/update-comment/${bookKey}/${comment.id}`, JSON.stringify(comment))
+    axios.put(`http://${process.env.REACT_APP_SERVER_ADDR}/update-comment/${bookKey}/${comment.id}/${userInfoContext.token}`, JSON.stringify(comment))
       .then(response => console.log(response))
       .catch(err => console.log(err))
   }
@@ -43,7 +43,7 @@ const  CommentsComponent = ({comments,bookKey}) => {
     let deleteCommentIndex = newComments.findIndex(el => el.id === comment.id)
     newComments.splice(deleteCommentIndex,1)
     setComments(newComments)
-    axios.delete(`http://${process.env.REACT_APP_SERVER_ADDR}/delete-comment/${bookKey}/${comment.id}`)
+    axios.delete(`http://${process.env.REACT_APP_SERVER_ADDR}/delete-comment/${bookKey}/${comment.id}/${userInfoContext.token}`)
       .then(response => console.log(response))
       .catch(err => console.log(err))
   }

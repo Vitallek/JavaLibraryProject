@@ -30,17 +30,17 @@ const getItems = (setItems) => {
     })
     .catch(err => alert('can`t get data'))
 }
-const deleteSelected = (selectedProducts, setProducts, toast) => {
+const deleteSelected = (selectedProducts, setProducts, toast,userInfoContext) => {
   console.log(selectedProducts)
-  axios.delete(`http://${process.env.REACT_APP_SERVER_ADDR}/delete-selected-subjects`, { data: JSON.stringify(selectedProducts) })
+  axios.delete(`http://${process.env.REACT_APP_SERVER_ADDR}/delete-selected-subjects/${userInfoContext.token}`, { data: JSON.stringify(selectedProducts) })
     .then(response => {
       getItems(setProducts)
       toast.current.show({severity: 'success', summary: 'Уведомление', detail: 'Данные удалены'});
     })
     .catch(err => console.log(err))
 }
-const updateItem = (field, value, rowData, toast) => {
-  axios.put(`http://${process.env.REACT_APP_SERVER_ADDR}/update-subject`, 
+const updateItem = (field, value, rowData, toast,userInfoContext) => {
+  axios.put(`http://${process.env.REACT_APP_SERVER_ADDR}/update-subject/${userInfoContext.token}`, 
   JSON.stringify({
     field: field,
     value: value, 
@@ -51,7 +51,7 @@ const updateItem = (field, value, rowData, toast) => {
   })
   .catch(err => console.log(err))
 }
-const SubjectsTableComponent = () => {
+const SubjectsTableComponent = ({userInfoContext}) => {
   const [items, setItems] = useState([])
   const [selectedItems, setSelectedItems] = useState([]);
   const [expandedRows, setExpandedRows] = useState([])
@@ -85,14 +85,14 @@ const SubjectsTableComponent = () => {
         }
         if (newValue.trim().length > 0) {
           rowData[field] = newValue;
-          updateItem(field, newValue, rowData, toast)
+          updateItem(field, newValue, rowData, toast,userInfoContext)
         }
         break;
       case 'rate':
       case 'rate_amount':
         if (parseFloat(newValue) !== NaN){
           rowData[field] = newValue;
-          updateItem(field, parseFloat(newValue), rowData, toast)
+          updateItem(field, parseFloat(newValue), rowData, toast,userInfoContext)
         }
         else
           event.preventDefault();
@@ -100,7 +100,7 @@ const SubjectsTableComponent = () => {
       default:
         if (newValue.trim().length > 0) {
           rowData[field] = newValue;
-          updateItem(field, newValue, rowData, toast)
+          updateItem(field, newValue, rowData, toast,userInfoContext)
         }
         else
           event.preventDefault();
@@ -119,7 +119,7 @@ const SubjectsTableComponent = () => {
           disabled={selectedItems.length === 0}
           color='error'
           onClick={() => {
-            deleteSelected(selectedItems, setItems, toast)
+            deleteSelected(selectedItems, setItems, toast,userInfoContext)
             setSelectedItems([])
           }}
         >
@@ -153,6 +153,7 @@ const SubjectsTableComponent = () => {
         open={openAddItemDialog}
         onClose={handleCloseAddItemDialog}
         refresh={refreshFromDialog}
+        userInfoContext={userInfoContext}
       />
     </>
   )

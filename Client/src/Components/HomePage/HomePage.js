@@ -140,7 +140,7 @@ const HomePage = () => {
         <Divider/>
       </Fade>
       <Fade>
-        <Box display='flex' justifyContent='center' sx={{ mb: 10 }}>
+        <Box display='flex' justifyContent='center' sx={{ mb: 10, mt: 10 }}>
           <PrimeButton variant='contained' onClick={() => navigate('/search')}>
             Explore more
           </PrimeButton>

@@ -86,7 +86,7 @@ const getAllData = async (setAllData) => {
     subjects: subjects
   })
 }
-const AddBookDialog = ({ open, onClose, refresh }) => {
+const AddBookDialog = ({ open, onClose, refresh, userInfoContext }) => {
   const [itemProps, setItemProps] = useState(cleanObject())
   const [links, setLinks] = useState([])
   const [allData, setAllData] = useState({})
@@ -118,7 +118,7 @@ const AddBookDialog = ({ open, onClose, refresh }) => {
     links.forEach(link => {
       if(link.url.length > 0 && link.title.length > 0) objectToPush.links.push(link)
     })
-    axios.post(`http://${process.env.REACT_APP_SERVER_ADDR}/insert-to-coll/books`,
+    axios.post(`http://${process.env.REACT_APP_SERVER_ADDR}/insert-to-coll/books/${userInfoContext.token}`,
       JSON.stringify([objectToPush])
     )
     .then(response => {

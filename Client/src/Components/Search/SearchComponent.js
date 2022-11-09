@@ -2,13 +2,11 @@ import { Card, CardContent, CardMedia, Grid, Select, MenuItem, Rating, Stack, Te
 import { Box } from '@mui/system';
 import Fade from 'react-reveal/Fade'
 import axios from 'axios';
-import { Button as PrimeButton } from 'primereact/button'
 import "primeflex/primeflex.css";
 import 'primeicons/primeicons.css';
 import "primereact/resources/primereact.css";
 import 'primereact/resources/themes/lara-light-indigo/theme.css';
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import { AuthorItemCard, BookItemCard, SubjectItemCard } from '../ItemCardComponent';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';

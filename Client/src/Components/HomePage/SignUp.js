@@ -107,7 +107,7 @@ const SignUp = ({ switchForm }) => {
             }}
             fullWidth
             variant="contained"
-            sx={{ mt: 3, mb: 2 }}
+            sx={{ mt: 3, mb: 2, borderRadius: 10}}
           >
             {'Зарегистрироваться'}
           </Button>
