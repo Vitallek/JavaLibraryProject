@@ -117,15 +117,15 @@ const BooksTableComponent = ({userInfoContext}) => {
     delete row._id
     return (
       <DataTable value={[row]} editMode="cell" dataKey="key" responsiveLayout="scroll">
-        <Column field='type' header='type' editor={(options) => textEditor(options)} onCellEditComplete={(e) => onCellEditComplete(e)} />
+        <Column field='type' header='Тип' editor={(options) => textEditor(options)} onCellEditComplete={(e) => onCellEditComplete(e)} />
         <Column field='key' header='key' editor={(options) => textEditor(options)} onCellEditComplete={(e) => onCellEditComplete(e)} />
-        <Column field='title' header='title' editor={(options) => textEditor(options)} onCellEditComplete={(e) => onCellEditComplete(e)} />
-        <Column field='first_publish_year' header='year' editor={(options) => textEditor(options)} onCellEditComplete={(e) => onCellEditComplete(e)} />
+        <Column field='title' header='Название' editor={(options) => textEditor(options)} onCellEditComplete={(e) => onCellEditComplete(e)} />
+        <Column field='first_publish_year' header='Год' editor={(options) => textEditor(options)} onCellEditComplete={(e) => onCellEditComplete(e)} />
         <Column field='author_key' header='a_id' editor={(options) => textEditor(options)} onCellEditComplete={(e) => onCellEditComplete(e)} />
-        <Column field='author_name' header='author' editor={(options) => textEditor(options)} onCellEditComplete={(e) => onCellEditComplete(e)} />
-        <Column field='rate' header='rate' />
-        <Column field='rate_amount' header='rate_amount' />
-        <Column field='image' header='image' editor={(options) => textEditor(options)} onCellEditComplete={(e) => onCellEditComplete(e)} />
+        <Column field='author_name' header='Автор' editor={(options) => textEditor(options)} onCellEditComplete={(e) => onCellEditComplete(e)} />
+        <Column field='rate' header='Оценка' />
+        <Column field='rate_amount' header='Оценили' />
+        <Column field='image' header='Картинка' editor={(options) => textEditor(options)} onCellEditComplete={(e) => onCellEditComplete(e)} />
       </DataTable>
     )
   }
@@ -142,13 +142,13 @@ const BooksTableComponent = ({userInfoContext}) => {
             setSelectedItems([])
           }}
         >
-          {`delete selected`}
+          {`удалить выбранные`}
         </Button>
         <Button
           color='success'
           onClick={() => setOpenAddItemDialog(true)}
         >
-          {`add item`}
+          {`добавить книгу`}
         </Button>
       </Stack>
       <DataTable
@@ -165,7 +165,7 @@ const BooksTableComponent = ({userInfoContext}) => {
         <Column selectionMode="multiple" headerStyle={{ width: '3em' }}></Column>
         <Column expander style={{ width: '3em' }} />
         <Column field="key" header="ID" filter sortable />
-        <Column field="title" header="Title" filter />
+        <Column field="title" header="Название" filter />
       </DataTable>
 
       <AddBookDialog 

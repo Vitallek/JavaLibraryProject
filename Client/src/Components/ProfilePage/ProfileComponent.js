@@ -70,7 +70,7 @@ const ProfileComponent = () => {
             <Typography
               fontSize={30}
             >
-              {`Email: ${user.email}`}
+              {`Почта: ${user.email}`}
             </Typography>
             
             <Divider/>
@@ -88,11 +88,10 @@ const ProfileComponent = () => {
               :
               <Typography
                 fontSize={30}
-                sx={{cursor:'pointer'}}
                 component='span'
                 gutterBottom
               >
-                {`Nickname: ${user.name}`}
+                {`Имя: ${user.name}`}
               </Typography>}
               <IconButton onClick={() => setIsEditingName(prev => !prev)}>
                 <EditIcon/>
@@ -104,7 +103,7 @@ const ProfileComponent = () => {
             <Typography
               fontSize={30}
             >
-               {`Role: ${user.role}`}
+               {`Роль: ${user.role}`}
             </Typography>
             
             <Divider/>

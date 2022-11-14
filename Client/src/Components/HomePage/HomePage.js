@@ -76,7 +76,7 @@ const HomePage = () => {
                 <strong>A-Library </strong>
                 provides free, high-quality educational resources for anyone, anywhere.
               </div>
-              <Link sx={{ mt: 5, cursor: 'pointer' }} underline='none' href='/about'>Learn more</Link>
+              <Link sx={{ mt: 5, cursor: 'pointer' }} underline='none' href='/about'>Узнать больше</Link>
             </Stack>
 
           </Typography>
@@ -89,7 +89,7 @@ const HomePage = () => {
           fontWeight={600}
           color='gray'
         >
-          Top books
+          Лучшие книги
         </Typography>
         <Stack 
           direction='row' 
@@ -108,7 +108,7 @@ const HomePage = () => {
           fontWeight={600}
           color='gray'
         >
-          Top authors
+          Лучшие авторы
         </Typography>
         <Stack 
           direction='row' 
@@ -127,7 +127,7 @@ const HomePage = () => {
           fontWeight={600}
           color='gray'
         >
-          Top genres
+          Лучшие жанры
         </Typography>
         <Stack 
           direction='row' 
@@ -142,7 +142,7 @@ const HomePage = () => {
       <Fade>
         <Box display='flex' justifyContent='center' sx={{ mb: 10, mt: 10 }}>
           <PrimeButton variant='contained' onClick={() => navigate('/search')}>
-            Explore more
+            Перейти к книгам
           </PrimeButton>
         </Box>
       </Fade>

@@ -136,13 +136,13 @@ const AuthorsTableComponent = ({userInfoContext}) => {
             setSelectedItems([])
           }}
         >
-          {`delete selected`}
+          {`Удалить выбранные`}
         </Button>
         <Button
           color='success'
           onClick={() => setOpenAddItemDialog(true)}
         >
-          {`add item`}
+          {`Добавить автора`}
         </Button>
       </Stack>
       <DataTable
@@ -159,7 +159,7 @@ const AuthorsTableComponent = ({userInfoContext}) => {
         <Column selectionMode="multiple" headerStyle={{ width: '3em' }}></Column>
         <Column expander style={{ width: '3em' }} />
         <Column field="author_key" header="ID" filter sortable />
-        <Column field="author_name" header="Name" filter />
+        <Column field="author_name" header="Имя" filter />
       </DataTable>
 
       <AddAuthorDialog 

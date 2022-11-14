@@ -27,7 +27,7 @@ const CustomRoutes = ({ }) => {
   return (
     <BrowserRouter>
       <Grid item xs={12} sx={{maxHeight: 50}} className='topNavContainer'>
-        <TopNavComponent authorized={props.auth} role={props.role}/>
+        <TopNavComponent authorized={props.auth} role={props.role} name={props.name}/>
       </Grid>
       <Grid container item xs={12} direction='column' flexWrap='nowrap'>
         <Routes>

@@ -175,20 +175,20 @@ const AddBookDialog = ({ open, onClose, refresh, userInfoContext }) => {
 
               options={allData.authors}
               sx={{ width: 300 }}
-              renderInput={(props) => <TextField {...props} label={'Authors'} onKeyPress={e => setAuthor(e)} />}
+              renderInput={(props) => <TextField {...props} label={'Автор'} onKeyPress={e => setAuthor(e)} />}
             />}
             <TextFieldNoValidate label='Author_key' field='author_key' disabled prop={itemProps.author_key} setItemProps={setItemProps} />
-            <TextFieldValidatePositiveInt label='Year' field='first_publish_year' prop={itemProps.first_publish_year} setItemProps={setItemProps} />
+            <TextFieldValidatePositiveInt label='Год' field='first_publish_year' prop={itemProps.first_publish_year} setItemProps={setItemProps} />
             <TextFieldNoValidate label='Key' field='key' prop={itemProps.key} setItemProps={setItemProps} />
-            <TextFieldNoValidate label='Title' field='title' prop={itemProps.title} setItemProps={setItemProps} />
-            <TextFieldNoValidate label='Type' field='type' prop={itemProps.type} setItemProps={setItemProps} />
+            <TextFieldNoValidate label='Название' field='title' prop={itemProps.title} setItemProps={setItemProps} />
+            <TextFieldNoValidate label='Тип' field='type' prop={itemProps.type} setItemProps={setItemProps} />
             {allData.subjects && <Autocomplete
               selectOnFocus={false}
               options={allData.subjects}
               sx={{ width: 300 }}
               renderInput={(props) => <TextField {...props} label={'Subjects'} onChange={e => setSubject(e)} />}
             />}
-            <TextFieldNoValidate label='ImageLink' field='image' prop={itemProps.image} setItemProps={setItemProps} />
+            <TextFieldNoValidate label='Картинка' field='image' prop={itemProps.image} setItemProps={setItemProps} />
           </Stack>
 
           <Stack
@@ -197,7 +197,7 @@ const AddBookDialog = ({ open, onClose, refresh, userInfoContext }) => {
             sx={{ overflow: 'scroll',minWidth: '30%', maxHeight: '40vh' }}
           >
             <TextField
-              label="Description"
+              label="Описание"
               placeholder="https://image.com,https://image2.com"
               multiline
               variant="standard"
@@ -213,7 +213,7 @@ const AddBookDialog = ({ open, onClose, refresh, userInfoContext }) => {
           >
             <Stack direction='row' spacing={1}>
               <Typography>
-                Links
+                Ссылки
               </Typography>
               <IconButton onClick={handleAddLink}>
                 <AddIcon />
@@ -225,7 +225,7 @@ const AddBookDialog = ({ open, onClose, refresh, userInfoContext }) => {
             {links.map((link, index) => (
               <Stack key={index} direction='row' spacing={1}>
                 <TextField
-                  label="Link url"
+                  label="Ссылка"
                   placeholder="https://image.com,https://image2.com"
                   // multiline
                   variant="standard"
@@ -233,7 +233,7 @@ const AddBookDialog = ({ open, onClose, refresh, userInfoContext }) => {
                   onChange={(e) => handleUpdateLink('url', e.target.value, index)}
                 />
                 <TextField
-                  label="Link title"
+                  label="Название ссылки"
                   placeholder="https://image.com,https://image2.com"
                   // multiline
                   variant="standard"

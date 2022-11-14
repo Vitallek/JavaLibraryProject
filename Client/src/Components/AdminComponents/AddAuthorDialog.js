@@ -116,9 +116,9 @@ const AddAuthorDialog = ({ open, onClose, refresh, userInfoContext }) => {
             spacing={2}
             sx={{ overflow: 'scroll',minWidth: '30%', maxHeight: '40vh' }}
           >
-            <TextFieldNoValidate label='name' field='author_name' prop={itemProps.author_name} setItemProps={setItemProps} />
+            <TextFieldNoValidate label='Имя' field='author_name' prop={itemProps.author_name} setItemProps={setItemProps} />
             <TextFieldNoValidate label='ID' field='author_key' prop={itemProps.author_key} setItemProps={setItemProps} />
-            <TextFieldNoValidate label='ImageLink' field='image' prop={itemProps.image} setItemProps={setItemProps} />
+            <TextFieldNoValidate label='Картинка' field='image' prop={itemProps.image} setItemProps={setItemProps} />
           </Stack>
         </Stack>
       </DialogContent>

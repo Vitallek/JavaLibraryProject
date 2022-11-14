@@ -123,13 +123,13 @@ const SubjectsTableComponent = ({userInfoContext}) => {
             setSelectedItems([])
           }}
         >
-          {`delete selected`}
+          {`Удалить выбранные`}
         </Button>
         <Button
           color='success'
           onClick={() => setOpenAddItemDialog(true)}
         >
-          {`add item`}
+          {`Добавить жанр`}
         </Button>
       </Stack>
       <DataTable 
@@ -143,10 +143,10 @@ const SubjectsTableComponent = ({userInfoContext}) => {
         responsiveLayout="scroll"
       >
         <Column selectionMode="multiple" headerStyle={{ width: '3em' }}></Column>
-        <Column filter sortable field='subject' header='Genre' editor={(options) => textEditor(options)} onCellEditComplete={(e) => onCellEditComplete(e)} />
-        <Column filter sortable field='rate' header='rate' editor={(options) => textEditor(options)} onCellEditComplete={(e) => onCellEditComplete(e)}/>
-        <Column filter sortable field='rate_amount' header='rate_amount' editor={(options) => textEditor(options)} onCellEditComplete={(e) => onCellEditComplete(e)}/>
-        <Column filter sortable field='image' header='image' editor={(options) => textEditor(options)} onCellEditComplete={(e) => onCellEditComplete(e)} />
+        <Column filter sortable field='subject' header='Жанр' editor={(options) => textEditor(options)} onCellEditComplete={(e) => onCellEditComplete(e)} />
+        <Column filter sortable field='rate' header='Оценка' editor={(options) => textEditor(options)} onCellEditComplete={(e) => onCellEditComplete(e)}/>
+        <Column filter sortable field='rate_amount' header='Оценили' editor={(options) => textEditor(options)} onCellEditComplete={(e) => onCellEditComplete(e)}/>
+        <Column filter sortable field='image' header='Картинка' editor={(options) => textEditor(options)} onCellEditComplete={(e) => onCellEditComplete(e)} />
       </DataTable>
 
       <AddSubjectDialog 

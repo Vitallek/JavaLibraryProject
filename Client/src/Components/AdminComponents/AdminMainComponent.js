@@ -34,9 +34,9 @@ const AdminMainComponent = () => {
           textColor="inherit"
           indicatorColor="string"
         >
-          <Tab label="Books" />
-          <Tab label="Authors" />
-          <Tab label="Genres" />
+          <Tab label="Книги" />
+          <Tab label="Авторы" />
+          <Tab label="Жанры" />
           {/* <Tab label="Content" /> */}
         </Tabs>
         {activeTab === 0 && <BooksTableComponent userInfoContext={userInfoContext}

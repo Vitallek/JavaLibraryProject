@@ -28,7 +28,7 @@ export const BookItemCard = ({ book }) => {
         component="img"
         height={150}
         image={book.image}
-        alt="book image"
+        alt="фото книги"
       />
       <CardContent>
         <div>
@@ -47,11 +47,11 @@ export const BookItemCard = ({ book }) => {
       <CardActions>
         {book.links?.length > 0 ?
           <Button onClick={_ => navigate(`/book/${book.key}`)}>
-            Explore
+            Перейти
           </Button>
           :
           <Button onClick={_ => navigate(`/book/${book.key}`)} color='inherit'>
-            Unavailable
+            Недоступно
           </Button>
         }
       </CardActions>
@@ -67,7 +67,7 @@ export const AuthorItemCard = ({ author }) => {
         component="img"
         height={200}
         image={author.image}
-        alt="green iguana"
+        alt="фото автора"
       />
       <CardContent>
         <strong>{author.author_name}</strong>
@@ -91,7 +91,7 @@ export const SubjectItemCard = ({ subject }) => {
         component="img"
         height={200}
         image={subject.image}
-        alt="green iguana"
+        alt="фото жанра"
       />
       <CardContent>
         <strong>{subject.subject}</strong>

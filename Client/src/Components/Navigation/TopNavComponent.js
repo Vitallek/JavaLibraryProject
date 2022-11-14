@@ -18,19 +18,19 @@ import { Box } from "@mui/system";
 const menu = [
   {
     icon: <Box component='img' width={35} src='./pumpkin.svg'/>,
-    title: 'Events',
+    title: 'События',
     to: '/events',
     items: []
   },
   {
     icon: <SearchRoundedIcon />,
-    title: 'Search',
+    title: 'Поиск',
     to: '/search',
     items: []
   },
   {
     // icon: <HomeRoundedIcon />,
-    title: 'About',
+    title: 'О библиотеке',
     to: '/about',
     items: []
   },
@@ -82,7 +82,7 @@ const handleOpenReg = (setDialogOpen, setAnchorEl) => {
   })
   setAnchorEl(null)
 }
-const TopNavComponent = ({ authorized, role }) => {
+const TopNavComponent = ({ authorized, role, name }) => {
   const [anchorEl, setAnchorEl] = useState(null)
   const isMenuOpened = Boolean(anchorEl)
   const navigate = useNavigate()
@@ -107,7 +107,7 @@ const TopNavComponent = ({ authorized, role }) => {
             <AccountCircleRoundedIcon />
           </ListItemIcon>
           <ListItemText>
-            Profile
+            Профиль
           </ListItemText>
         </MenuItem>
         {role === 'admin' ?
@@ -119,7 +119,7 @@ const TopNavComponent = ({ authorized, role }) => {
               <SupervisorAccountRoundedIcon />
             </ListItemIcon>
             <ListItemText>
-              Administration
+              Управление
             </ListItemText>
           </MenuItem> : null
         }
@@ -131,7 +131,7 @@ const TopNavComponent = ({ authorized, role }) => {
             <FavoriteRoundedIcon />
           </ListItemIcon>
           <ListItemText>
-            Favourite
+            Избранное
           </ListItemText>
         </MenuItem>
         <MenuItem onClick={Logout}>
@@ -139,7 +139,7 @@ const TopNavComponent = ({ authorized, role }) => {
             <LogoutRoundedIcon />
           </ListItemIcon>
           <ListItemText>
-            Logout
+            Выйти
           </ListItemText>
         </MenuItem>
       </Menu>
@@ -199,7 +199,9 @@ const TopNavComponent = ({ authorized, role }) => {
         <AutoStoriesRoundedIcon color="action" fontSize="large" />
       </Box>
       <Stack direction='row' spacing={2}>
-
+        {name && <Typography display='flex' justifyContent='center' alignItems='center'>
+          {`Привет, ${name}`}
+        </Typography>}
         {menu.map((item, key) => <CustomMenuItem key={key} item={item} />)}
         <Button
           startIcon={<MoreVertRoundedIcon />}

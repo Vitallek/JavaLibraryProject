@@ -113,8 +113,8 @@ const AddSubjectDialog = ({ open, onClose, refresh, userInfoContext }) => {
             direction='column'
             spacing={2}
           >
-            <TextFieldNoValidate label='subject' field='subject' prop={itemProps.subject} setItemProps={setItemProps} />
-            <TextFieldNoValidate label='ImageLink' field='image' prop={itemProps.image} setItemProps={setItemProps} />
+            <TextFieldNoValidate label='Жанр' field='subject' prop={itemProps.subject} setItemProps={setItemProps} />
+            <TextFieldNoValidate label='Картинка' field='image' prop={itemProps.image} setItemProps={setItemProps} />
           </Stack>
         </Stack>
       </DialogContent>

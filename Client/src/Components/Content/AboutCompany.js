@@ -45,14 +45,9 @@ const AboutCompany = () => {
           >
             <Stack direction='column'>
               <div>
-                <strong>A-Library </strong>
-                provides free, high-quality educational resources for anyone, anywhere.
-              </div>
-              <div>
-              А ещё тут должно быть <strong>описание</strong>, но мне лень его придумывать, так что продублирую главный экран
+                - самая крутая библиотека
               </div>
             </Stack>
-
           </Typography>
         </Stack>
       </Fade>

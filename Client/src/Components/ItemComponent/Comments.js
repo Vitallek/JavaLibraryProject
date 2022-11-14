@@ -52,14 +52,14 @@ const  CommentsComponent = ({comments,bookKey}) => {
       <Typography
         fontSize={30}
       >
-        {'Comments'}
+        {'Комментарии'}
       </Typography>
       {commentsState.map((comment, index) => {
         return (
           <Paper key={index} sx={{mb:1, p:2, maxWidth:'90%'}}>
             <Grid container spacing={2}>
               <Grid item xs={1}>
-                <Avatar alt="Remy Sharp" src='./profileMock.jpg' />
+                <Avatar alt="Аватар" src='./profileMock.jpg' />
               </Grid>
               <Grid justifyContent="left" item xs={10}>
                 <h4 style={{ margin: 0, textAlign: "left" }}>{comment.author}</h4>
@@ -67,7 +67,7 @@ const  CommentsComponent = ({comments,bookKey}) => {
                   {comment.id !== isEditComment.id || !isEditComment.state ? `${comment.text}` :
                     <TextField
                       sx={{minWidth: '100%'}}
-                      label="Maximum length: 1000"
+                      label="Макс. кол-во: 1000"
                       multiline
                       rows={5}
                       inputProps={{ maxLength: 1000 }}
@@ -79,9 +79,9 @@ const  CommentsComponent = ({comments,bookKey}) => {
                 </Box>
                 <p style={{ textAlign: "left", color: "gray" }}>
                   {comment.edited ? 
-                  `edited ${new Date(parseInt(comment.edited)).toLocaleString()}`
+                  `Изменено ${new Date(parseInt(comment.edited)).toLocaleString()}`
                   :
-                  `posted ${new Date(parseInt(comment.date)).toLocaleString()}`
+                  `${new Date(parseInt(comment.date)).toLocaleString()}`
                 }
                 </p>
               </Grid>

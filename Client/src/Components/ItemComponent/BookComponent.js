@@ -67,7 +67,7 @@ const BookComponent = () => {
 
   const handleSetFavorite = () => {
     if(!userInfoContext.auth) {
-      return alert('Unauthorized action')
+      return alert('Пожалуйста, авторизуйтесь')
     }
     if(!isFavorite){
       axios.put(`http://${process.env.REACT_APP_SERVER_ADDR}/add-to-favorite/${userInfoContext.token}`, JSON.stringify({
@@ -106,7 +106,7 @@ const BookComponent = () => {
             <Box display='flex' justifyContent='center' alignItems='center'>
               <FavoriteIcon color={!isFavorite ? 'action' : 'primary'} />
               <Button disabled={!userInfoContext.auth} color={!isFavorite ? 'inherit' : 'primary'} onClick={handleSetFavorite}>
-                To Favorite
+                В избранное
               </Button>
             </Box>
             {/* decide to delete */}
@@ -126,7 +126,7 @@ const BookComponent = () => {
               <Typography
                 fontSize={20}
               >
-                Links
+                Ссылки
               </Typography>
               <Divider/>
                 {book.links.map((link, index) => <Link key={index} sx={{mt:5, cursor:'pointer'}} underline='none' target='_blank' href={link.url}>{link.title}</Link>)}
@@ -147,19 +147,19 @@ const BookComponent = () => {
             <Typography
               fontSize={20}
             >
-              {`Genre: ${book.subject}`}
+              {`Жанр: ${book.subject}`}
             </Typography>
 
             <Stack direction='row' spacing={2}>
               <Typography
                 fontSize={20}
               >
-                {`Author: ${book.author_name}`}
+                {`Автор: ${book.author_name}`}
               </Typography>
               <Typography
                 fontSize={20}
               >
-                {`First publish year: ${book.first_publish_year}`}
+                {`Год издания: ${book.first_publish_year}`}
               </Typography>
               <Typography component="legend">{parseFloat(book.rate).toFixed(1)}
                 <Rating name="read-only" value={Math.floor(book.rate)} readOnly />
@@ -171,7 +171,7 @@ const BookComponent = () => {
               <Typography
                 fontSize={30}
               >
-                {'Description'}
+                {'Описание'}
               </Typography>
               <Typography component='span' style={{ whiteSpace: 'pre-line'}}>
                 {book.description.value === undefined 
@@ -194,22 +194,22 @@ const BookComponent = () => {
             <Typography
               fontSize={20}
             >
-              {'No comments yet...'}
+              {'Здесь пока нет комментариев...'}
             </Typography>
             }
             {userInfoContext.auth ?
             <Stack direction='column' sx={{maxWidth: '60%'}} spacing={2}>
               <TextField
                 inputRef={commentRef}
-                label="Maximum length: 1000"
+                label="Макс. кол-во: 1000"
                 multiline
                 rows={5}
-                defaultValue='Awesome book!'
+                defaultValue='Отличная книга!'
                 inputProps={{ maxLength: 1000 }}
                 variant="filled"
               />
               <Button disabled={!placeCommentAvailable} variant="contained" onClick={_ => placeComment(commentRef.current.value)}>
-                Comment
+                Оставить комментарий
               </Button>
             </Stack>
             :
@@ -217,7 +217,7 @@ const BookComponent = () => {
               fontSize={20}
               color="gray"
             >
-              {'Authorize to write comments'}
+              {'Авторизуйтесь, чтобы оставлять комментарии'}
             </Typography>
             }
           </Stack>

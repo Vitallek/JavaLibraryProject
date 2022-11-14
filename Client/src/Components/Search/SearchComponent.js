@@ -93,7 +93,7 @@ const SearchComponent = () => {
             <Typography
               fontSize={25}
             >
-              Search from
+              Поиск по
             </Typography>
             <Select
               sx={{ minWidth: "10vw" }}
@@ -112,7 +112,7 @@ const SearchComponent = () => {
               sx={{ width: 300 }}
               renderInput={(props) => <TextField {...props} label={selectedField} onKeyPress={e => searchByKey(e, selectedField)} />}
             />}
-            <Tooltip title='Press enter' placement='right'>
+            <Tooltip title='Нажмите enter' placement='right'>
               <SearchRoundedIcon sx={{ color: 'action.active', mr: 1, my: 0.5, fontSize: 30, cursor: 'pointer' }} />
             </Tooltip>
             <IconButton onClick={() => requestContent(skipTakeParams.take, skipTakeParams.skip)}>
@@ -145,7 +145,7 @@ const SearchComponent = () => {
             <Typography
               fontSize={20}
             >
-              Show
+              Показывать
             </Typography>
             <Select
               value={skipTakeParams.take}

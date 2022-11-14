@@ -60,13 +60,13 @@ const FavoritesComponent = () => {
             <Typography
               fontSize={25}
             >
-              Favorite books
+              Избранные книги
             </Typography>
             {searchKeys && <Autocomplete
               selectOnFocus={false}
               options={searchKeys === undefined ? [] : searchKeys}
               sx={{ width: 300 }}
-              renderInput={(props) => <TextField {...props} label="Title, author or genre" onKeyPress={e => searchByKey(e)} />}
+              renderInput={(props) => <TextField {...props} label="Название, автор или жанр" onKeyPress={e => searchByKey(e)} />}
             />}
             <Tooltip title='Press enter' placement='right'>
               <SearchRoundedIcon sx={{ color: 'action.active', mr: 1, my: 0.5, fontSize: 30, cursor: 'pointer' }} />
